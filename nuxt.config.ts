@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxt/image", "nuxt-auth-utils"],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -21,5 +21,9 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: "./components/ui",
+  },
+
+  image: {
+    dir: "public",
   },
 });
