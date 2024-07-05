@@ -2,7 +2,6 @@
 
 const { data, signOut } = useAuth()
 
-const router = useRouter()
 const nav = [
   { label: 'Início', to: '/' },
   { label: 'Cursos', to: '/courses' },

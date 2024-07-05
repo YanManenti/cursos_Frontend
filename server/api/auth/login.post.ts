@@ -3,7 +3,7 @@ import { z } from "zod";
 import { sign } from "jsonwebtoken";
 
 const refreshTokens: Record<number, Record<string, any>> = {};
-export const SECRET = process.env.NUXT_NEXTAUTH_SECRET || "secret";
+export const SECRET = "secret";
 
 export default eventHandler(async (event) => {
   const regex = new RegExp(
