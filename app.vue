@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import Button from './components/ui/button/Button.vue';
+
+const { data, signOut } = useAuth()
+
 const router = useRouter()
-const { loggedIn, user, session, clear } = useUserSession()
 const nav = [
   { label: 'Início', to: '/' },
   { label: 'Cursos', to: '/courses' },
@@ -30,10 +31,10 @@ const nav = [
           <p class="font-semibold text-lg">Blog</p>
         </Button>
       </div>
-      <div v-if="loggedIn">
+      <div v-if="data">
         <div class="flex flex-row items-center gap-x-1">
-          <p class="font-semibold text-lg">Bem vindo, {{ user.login }}</p>
-          <Button :variant="'ghost'" @click="clear">
+          <p class="font-semibold text-lg">Bem vindo, {{ data.username }}</p>
+          <Button :variant="'ghost'" @click="signOut()">
             <p class="font-semibold text-base">Sair</p>
           </Button>
         </div>
