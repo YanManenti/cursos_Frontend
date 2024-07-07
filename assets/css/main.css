@@ -5,9 +5,10 @@
 @tailwind utilities;
 
 body{
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-top: 1.5rem;
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
+}
+
+body::-webkit-scrollbar{
+    width: 0;
 }
