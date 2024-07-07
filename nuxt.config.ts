@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxt/image",
     "@sidebase/nuxt-auth",
+    "nuxt-lucide-icons"
   ],
 
   shadcn: {

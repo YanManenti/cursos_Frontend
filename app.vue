@@ -14,7 +14,7 @@ const nav = [
 
 <template>
   <div dir="routing/pages" :nav="nav" current-route>
-    <div class="bg-white flex flex-row max-h-40 items-center justify-between pb-6">
+    <div class="bg-white flex flex-row max-h-40 items-center justify-between pb-12">
       <div class="flex flex-row items-center gap-x-1">
         <img src="./public/logo.svg" class="max-h-14" />
         <h1 class="font-bold text-4xl antialiased text-[#00b3aa] text-center">IMTESTE</h1>
