@@ -6,6 +6,35 @@ import CarouselItem from '@/components/ui/carousel/CarouselItem.vue';
 import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
 import { ArrowRight } from 'lucide-vue-next';
+
+// const file = ref(null);
+// const fileData = ref(null);
+
+// const fileName = computed(() => file.value?.name);
+// const fileExtension = computed(() => fileName.value?.substr(fileName.value?.lastIndexOf(".") + 1));
+// const fileMimeType = computed(() => file.value?.type);
+
+// const uploadFile = (event) => {
+//     file.value = event.target.files[0];
+// };
+
+// const submitFile = async () => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file.value);
+//     reader.onload = async () => {
+//         const encodedFile = reader.result.split(",")[1];
+//         fileData.value = encodedFile;
+//     };
+// };
+
+const name = ref();
+
+
+const changeName = async (e: any) => {
+    name.value = e.target.files[0];
+}
+
+
 </script>
 
 <template>
@@ -37,20 +66,40 @@ import { ArrowRight } from 'lucide-vue-next';
         <FlatCard width="w-1/3" title="Certificação Reconhecida"
             description="Receba um certificado reconhecido ao concluir o curso" iconName="Award" />
     </div>
-    <div class="container p-12 flex flex-col bg-secondary gap-12 items-center border-t border-gray-300 shadow-inner">
+
+    <input type="file" id="image_input" accept="image/jpeg, image/png, image/jpg" multiple="false"
+        v-on:change="(e) => changeName(e)" />
+
+
+    <div
+        class="container px-24 py-12 flex flex-col bg-secondary gap-6 items-center border-t border-gray-300 shadow-inner">
         <div class="w-full flex flex-row justify-between">
             <h1 class="text-3xl font-bold text-white">Cursos em Destaque</h1>
             <Button :variant="'ghost'" class="text-white hover:text-white hover:font-bold"
                 @click="$router.push('/courses')">Ver Todos</Button>
         </div>
-
         <Carousel class="flex flex-row items-center justify-center p-4">
-            <CarouselContent class="max-w-fit flex flex-row gap-4">
-                <CarouselItem class="basis-1/3">1</CarouselItem>
-                <CarouselItem class="basis-1/3">2</CarouselItem>
-                <CarouselItem class="basis-1/3">3</CarouselItem>
-                <CarouselItem class="basis-1/3">4</CarouselItem>
-                <CarouselItem class="basis-1/3">5</CarouselItem>
+            <CarouselContent class="max-w-fit flex flex-row">
+                <CarouselItem class="basis-1/3">
+                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web" :price="100.30" :base64Image="name"
+                        :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
+                </CarouselItem>
+                <CarouselItem class="basis-1/3">
+                    <CourseCard width="w-full" title="Curso para Iniciantes em Programação" :price="50.20"
+                        :base64Image="name" :score="4.0" :reviews="50" :onClick="() => console.log('Clicked')" />
+                </CarouselItem>
+                <CarouselItem class="basis-1/3">
+                    <CourseCard width="w-full" title="Curso de Desenvolvimento de Aplicativos Móveis" :price="150"
+                        :base64Image="name" :score="4.8" :reviews="200" :onClick="() => console.log('Clicked')" />
+                </CarouselItem>
+                <CarouselItem class="basis-1/3">
+                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web 2" :price="100" :base64Image="name"
+                        :score="3.5" :reviews="200" :onClick="() => console.log('Clicked')" />
+                </CarouselItem>
+                <CarouselItem class="basis-1/3">
+                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web 3" :price="100" :base64Image="name"
+                        :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
+                </CarouselItem>
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
