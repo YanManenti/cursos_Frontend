@@ -10,6 +10,12 @@ export default defineNuxtConfig({
   ssr: false,
   css: ["~/assets/css/main.css"],
 
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.includes("Composable"),
+    },
+  },
+
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -22,7 +28,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxt/image",
     "@sidebase/nuxt-auth",
-    "nuxt-lucide-icons"
+    "nuxt-lucide-icons",
   ],
 
   shadcn: {

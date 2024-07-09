@@ -6,32 +6,12 @@ import CarouselItem from '@/components/ui/carousel/CarouselItem.vue';
 import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
 import { ArrowRight } from 'lucide-vue-next';
-
-// const file = ref(null);
-// const fileData = ref(null);
-
-// const fileName = computed(() => file.value?.name);
-// const fileExtension = computed(() => fileName.value?.substr(fileName.value?.lastIndexOf(".") + 1));
-// const fileMimeType = computed(() => file.value?.type);
-
-// const uploadFile = (event) => {
-//     file.value = event.target.files[0];
-// };
-
-// const submitFile = async () => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file.value);
-//     reader.onload = async () => {
-//         const encodedFile = reader.result.split(",")[1];
-//         fileData.value = encodedFile;
-//     };
-// };
+import getEncodedBase64Image from '@/utils/getEncodedBase64Image.js';
 
 const name = ref();
 
-
-const changeName = async (e: any) => {
-    name.value = e.target.files[0];
+const setName = (newName: string) => {
+    name.value = newName;
 }
 
 
@@ -68,7 +48,7 @@ const changeName = async (e: any) => {
     </div>
 
     <input type="file" id="image_input" accept="image/jpeg, image/png, image/jpg" multiple="false"
-        v-on:change="(e) => changeName(e)" />
+        v-on:change="(e) => getEncodedBase64Image(e, setName)" />
 
 
     <div
@@ -81,24 +61,25 @@ const changeName = async (e: any) => {
         <Carousel class="flex flex-row items-center justify-center p-4">
             <CarouselContent class="max-w-fit flex flex-row">
                 <CarouselItem class="basis-1/3">
-                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web" :price="100.30" :base64Image="name"
-                        :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
+                    <CourseCard id="1" width="w-full" title="Curso de Desenvolvimento Web" :price="100.30"
+                        :base64Image="name" :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
                 </CarouselItem>
                 <CarouselItem class="basis-1/3">
-                    <CourseCard width="w-full" title="Curso para Iniciantes em Programação" :price="50.20"
+                    <CourseCard id="2" width="w-full" title="Curso para Iniciantes em Programação" :price="50.20"
                         :base64Image="name" :score="4.0" :reviews="50" :onClick="() => console.log('Clicked')" />
                 </CarouselItem>
                 <CarouselItem class="basis-1/3">
-                    <CourseCard width="w-full" title="Curso de Desenvolvimento de Aplicativos Móveis" :price="150"
-                        :base64Image="name" :score="4.8" :reviews="200" :onClick="() => console.log('Clicked')" />
+                    <CourseCard id="3" width="w-full" title="Curso de Desenvolvimento de Aplicativos Móveis"
+                        :price="150" :base64Image="name" :score="4.8" :reviews="200"
+                        :onClick="() => console.log('Clicked')" />
                 </CarouselItem>
                 <CarouselItem class="basis-1/3">
-                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web 2" :price="100" :base64Image="name"
-                        :score="3.5" :reviews="200" :onClick="() => console.log('Clicked')" />
+                    <CourseCard id="4" width="w-full" title="Curso de Desenvolvimento Web 2" :price="100"
+                        :base64Image="name" :score="3.5" :reviews="200" :onClick="() => console.log('Clicked')" />
                 </CarouselItem>
                 <CarouselItem class="basis-1/3">
-                    <CourseCard width="w-full" title="Curso de Desenvolvimento Web 3" :price="100" :base64Image="name"
-                        :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
+                    <CourseCard id="5" width="w-full" title="Curso de Desenvolvimento Web 3" :price="100"
+                        :base64Image="name" :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
                 </CarouselItem>
             </CarouselContent>
             <CarouselPrevious />

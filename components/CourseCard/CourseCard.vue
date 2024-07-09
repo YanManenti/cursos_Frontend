@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Star } from 'lucide-vue-next';
+import decodeBase64Image from '@/utils/decodeBase64Image.js'
 const CourseCardProps = defineProps<{
+    id: string
     width: string
     title: string
     price: number
@@ -14,27 +16,14 @@ const containerClass = `${CourseCardProps.width} h-full bg-white rounded-lg shad
 
 const imgSrc = ref(CourseCardProps.base64Image);
 
-const decodeImageProp = () => {
-    const reader = new FileReader();
-    if (!CourseCardProps.base64Image) return null;
-    reader.readAsDataURL(CourseCardProps.base64Image);
-    reader.onload = async () => {
-        try {
-            if (typeof reader.result !== 'string') throw new Error('Error reading file');
-            const encodedFile = reader.result?.split(",")[1];
-            imgSrc.value = `data:image/${CourseCardProps.base64Image.type};base64,${encodedFile}`;
-        } catch {
-            console.log('Error reading file');
-            imgSrc.value = null;
-        }
-
-    };
+const setImgSrc = (newSrc: string) => {
+    imgSrc.value = newSrc;
 }
 
 watch(
     () => CourseCardProps.base64Image,
-    () => {
-        decodeImageProp();
+    (newValue) => {
+        decodeBase64Image(newValue, setImgSrc);
     },
     { immediate: true }
 );
@@ -42,7 +31,7 @@ watch(
 </script>
 
 <template>
-    <div :class="containerClass" @click="onClick">
+    <div :class="containerClass" @click="$router.push(`/courses/${id}`)">
         <div class="h-full flex flex-col gap-y-2 justify-between">
             <div class="flex flex-col justify-start gap-y-2">
                 <img v-bind:src="imgSrc" class="rounded-lg max-h-40 object-cover" alt="Course image" />

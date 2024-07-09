@@ -9,7 +9,7 @@ definePageMeta({
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         CADASTRO
-    </div>
+    </PageContainer>
 </template>

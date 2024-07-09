@@ -14,7 +14,7 @@ definePageMeta({
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         LOGIN
         <h1>Login Page</h1>
         <pre>Status: {{ status }}</pre>
@@ -28,5 +28,5 @@ definePageMeta({
                 Sign in
             </button>
         </form>
-    </div>
+    </PageContainer>
 </template>
