@@ -65,11 +65,9 @@ export default defineNuxtConfig({
       },
       session: {
         dataType: {
-          id: "string",
           email: "string",
           username: "string",
-          role: "'admin' | 'guest' | 'account'",
-          subscriptions: "{ id: number, status: 'ACTIVE' | 'INACTIVE' }[]",
+          avatar: "string",
         },
         dataResponsePointer: "/",
       },

@@ -1,6 +1,22 @@
 <script setup lang="ts">
 
+useHead({
+  title: 'IMTESTE',
+  meta: [
+    {
+      name: 'description',
+      content: 'IMTESTE - Aprenda com os melhores cursos online'
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1.0'
+    }
+  ]
+})
+
 const { data, signOut } = useAuth()
+
+// TRANSFORM DATA.AVATAR USING DECODEBASE64IMAGE
 
 const nav = [
   { label: 'Início', to: '/' },
@@ -17,7 +33,7 @@ const nav = [
     <div class="bg-white flex flex-row max-h-40 items-center justify-between p-12">
       <div class="flex flex-row items-center gap-x-1">
         <img src="./public/logo.svg" class="max-h-14" />
-        <h1 class="font-bold text-4xl antialiased text-[#00b3aa] text-center">IMTESTE</h1>
+        <h1 class="font-bold text-4xl antialiased text-primary text-center">IMTESTE</h1>
       </div>
       <div class="flex flex-row items-center gap-x-4">
         <Button :variant="'ghost'" @click="$router.push('/')">
@@ -31,8 +47,9 @@ const nav = [
         </Button>
       </div>
       <div v-if="data">
-        <div class="flex flex-row items-center gap-x-1">
-          <p class="font-semibold text-lg">Bem vindo, {{ data.username }}</p>
+        <div class="flex flex-row items-center gap-x-2">
+          <p class="font-semibold text-lg">Bem vindo, {{ "Placeholder" }}</p>
+          <img :src="data.avatar" class="max-h-10 rounded-full object-cover" />
           <Button :variant="'ghost'" @click="signOut()">
             <p class="font-semibold text-base">Sair</p>
           </Button>

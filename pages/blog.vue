@@ -5,6 +5,6 @@ definePageMeta({ auth: false })
 
 <template>
     <PageContainer>
-        BLOG
+        Isso só esta aqui pq ter 3 opções no meio do header é mais bonito
     </PageContainer>
 </template>

@@ -10,22 +10,29 @@ export default eventHandler(async (event) => {
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
   );
   const result = z
-    .object({ username: z.string().min(3), password: z.string().regex(regex) })
+    .object({
+      username: z.string().min(3).max(10),
+      email: z.string().email(),
+      password: z.string().regex(regex),
+    })
     .safeParse(await readBody(event));
   if (!result.success) {
+    const errors = result.error.errors.map((error) => error.message);
     throw createError({
       statusCode: 403,
-      statusMessage:
-        "Unauthorized, password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.",
+      statusMessage: `Invalid input. Please provide a valid username, email and password. Errors: ${errors.join(
+        ", "
+      )}.`,
     });
   }
 
   const expiresIn = "7d";
   const refreshToken =
     Math.floor(Math.random() * (1000000000000000 - 1 + 1)) + 1;
-  const { username } = result.data;
+  const { username, email } = result.data;
   const user = {
     username,
+    email,
     avatar: "https://github.com/nuxt.png",
   };
 

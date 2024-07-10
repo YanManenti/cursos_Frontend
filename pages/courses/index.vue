@@ -24,7 +24,7 @@ definePageMeta({ auth: false })
 
 
 const arrayExample = ref(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"]);
-const itemsPerPage = ref(12);
+const itemsPerPage = ref(15);
 const blob = new Blob();
 
 const page = ref(1);
@@ -41,8 +41,8 @@ const computedArray = computed(() => {
 </script>
 
 <template>
-    <PageContainer>
-        <div class="container flex flex-col gap-4">
+    <PageContainer class="container">
+        <div class="w-full flex flex-col gap-4">
             <div class="flex flex-row gap-2 items-end">
                 <div class="flex flex-col w-[55%] gap-1">
                     <label for="search" class="text-sm font-semibold">Nome do Curso</label>
@@ -54,7 +54,8 @@ const computedArray = computed(() => {
                 <div class="flex flex-col w-[25%] gap-1">
                     <label for="filter" class="text-sm font-semibold">Filtros</label>
                     <Select class="h-fit rounded-md" name="filter" id="filter">
-                        <SelectTrigger class=" w-full rounded-md">
+                        <SelectTrigger
+                            class="w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary">
                             <SelectValue class="text-secondary placeholder:text-black"
                                 placeholder="Selecione um Filtro" />
                         </SelectTrigger>
@@ -90,13 +91,13 @@ const computedArray = computed(() => {
                         </SelectContent>
                     </Select>
                 </div>
-                <Button :variant="'secondary'" class="w-[10%]">Limpar</Button>
-                <Button :variant="'default'" class="w-[10%]">Buscar</Button>
+                <Button :variant="'secondary'" class="w-[10%] font-bold">Limpar</Button>
+                <Button :variant="'default'" class="w-[10%] font-bold">Buscar</Button>
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
-                <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-center">
+                <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">
                     <template v-for="(current) in computedArray">
-                        <CourseCard :id="current" width="w-[32%] min-w-fit border border-secondary" :title="current"
+                        <CourseCard :id="current" width="w-[26rem] border border-secondary" :title="current"
                             :price="100" :base64Image="blob" :score="3.5" :reviews="200"
                             :onClick="() => console.log('Clicked')" />
                     </template>

@@ -51,14 +51,13 @@ const setName = (newName: string) => {
         v-on:change="(e) => getEncodedBase64Image(e, setName)" />
 
 
-    <div
-        class="container px-24 py-12 flex flex-col bg-secondary gap-6 items-center border-t border-gray-300 shadow-inner">
-        <div class="w-full flex flex-row justify-between">
+    <div class="w-full px-24 py-12 flex flex-col bg-secondary gap-6 items-center border-t border-gray-300 shadow-inner">
+        <div class="container flex flex-row justify-between">
             <h1 class="text-3xl font-bold text-white">Cursos em Destaque</h1>
             <Button :variant="'ghost'" class="text-white hover:text-white hover:font-bold"
                 @click="$router.push('/courses')">Ver Todos</Button>
         </div>
-        <Carousel class="flex flex-row items-center justify-center p-4">
+        <Carousel class="container flex flex-row items-center justify-center p-4">
             <CarouselContent class="max-w-fit flex flex-row">
                 <CarouselItem class="basis-1/3">
                     <CourseCard id="1" width="w-full" title="Curso de Desenvolvimento Web" :price="100.30"
