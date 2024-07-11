@@ -6,7 +6,7 @@ const CourseCardProps = defineProps<{
     width: string
     title: string
     price: number
-    base64Image: any
+    base64Image: string
     score: number
     reviews: number
     onClick: () => void
@@ -14,19 +14,6 @@ const CourseCardProps = defineProps<{
 
 const containerClass = `${CourseCardProps.width} h-full bg-white rounded-lg shadow-md p-4 cursor-pointer`
 
-const imgSrc = ref(CourseCardProps.base64Image);
-
-const setImgSrc = (newSrc: string) => {
-    imgSrc.value = newSrc;
-}
-
-watch(
-    () => CourseCardProps.base64Image,
-    (newValue) => {
-        decodeBase64Image(newValue, setImgSrc);
-    },
-    { immediate: true }
-);
 
 </script>
 
@@ -34,7 +21,8 @@ watch(
     <div :class="containerClass" @click="$router.push(`/courses/${id}`)">
         <div class="h-full flex flex-col gap-y-2 justify-between">
             <div class="flex flex-col justify-start gap-y-2">
-                <img v-bind:src="imgSrc" class="rounded-lg max-h-40 object-cover" alt="Course image" />
+                <img v-bind:src="CourseCardProps.base64Image" class="rounded-lg max-h-40 object-cover"
+                    alt="Course image" />
                 <h1 class="font-bold text-lg">{{ title }}</h1>
             </div>
             <div class="flex flex-row items-center justify-between ">

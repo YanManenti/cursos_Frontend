@@ -6,14 +6,10 @@ import CarouselItem from '@/components/ui/carousel/CarouselItem.vue';
 import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
 import { ArrowRight } from 'lucide-vue-next';
-import getEncodedBase64Image from '@/utils/getEncodedBase64Image.js';
 
-const name = ref();
+const data = await $fetch('http://127.0.0.1:8000/api/courses/').then((res: any) => res.courses);
 
-const setName = (newName: string) => {
-    name.value = newName;
-}
-
+const courses = ref(data);
 
 </script>
 
@@ -27,7 +23,7 @@ const setName = (newName: string) => {
                 lhe ensinarão o processo de busca de emprego, incluindo networking, habilidades de entrevista e
                 negociação de ofertas de emprego. Comece sua carreira com o pé direito com a nossa orientação
                 especializada.</p>
-            <Button class="flex gap-2 w-fit h-fit items-center bg-primary">
+            <Button class="flex gap-2 w-fit h-fit items-center bg-primary" @click="$router.push('/courses')">
                 <p class="font-bold">Descubra o seu Curso</p>
                 <ArrowRight class="w-6 h-6" />
             </Button>
@@ -46,11 +42,6 @@ const setName = (newName: string) => {
         <FlatCard width="w-1/3" title="Certificação Reconhecida"
             description="Receba um certificado reconhecido ao concluir o curso" iconName="Award" />
     </div>
-
-    <input type="file" id="image_input" accept="image/jpeg, image/png, image/jpg" multiple="false"
-        v-on:change="(e) => getEncodedBase64Image(e, setName)" />
-
-
     <div class="w-full px-24 py-12 flex flex-col bg-secondary gap-6 items-center border-t border-gray-300 shadow-inner">
         <div class="container flex flex-row justify-between">
             <h1 class="text-3xl font-bold text-white">Cursos em Destaque</h1>
@@ -59,27 +50,13 @@ const setName = (newName: string) => {
         </div>
         <Carousel class="container flex flex-row items-center justify-center p-4">
             <CarouselContent class="max-w-fit flex flex-row">
-                <CarouselItem class="basis-1/3">
-                    <CourseCard id="1" width="w-full" title="Curso de Desenvolvimento Web" :price="100.30"
-                        :base64Image="name" :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
-                </CarouselItem>
-                <CarouselItem class="basis-1/3">
-                    <CourseCard id="2" width="w-full" title="Curso para Iniciantes em Programação" :price="50.20"
-                        :base64Image="name" :score="4.0" :reviews="50" :onClick="() => console.log('Clicked')" />
-                </CarouselItem>
-                <CarouselItem class="basis-1/3">
-                    <CourseCard id="3" width="w-full" title="Curso de Desenvolvimento de Aplicativos Móveis"
-                        :price="150" :base64Image="name" :score="4.8" :reviews="200"
-                        :onClick="() => console.log('Clicked')" />
-                </CarouselItem>
-                <CarouselItem class="basis-1/3">
-                    <CourseCard id="4" width="w-full" title="Curso de Desenvolvimento Web 2" :price="100"
-                        :base64Image="name" :score="3.5" :reviews="200" :onClick="() => console.log('Clicked')" />
-                </CarouselItem>
-                <CarouselItem class="basis-1/3">
-                    <CourseCard id="5" width="w-full" title="Curso de Desenvolvimento Web 3" :price="100"
-                        :base64Image="name" :score="4.5" :reviews="100" :onClick="() => console.log('Clicked')" />
-                </CarouselItem>
+                <template v-for="(course) in courses">
+                    <CarouselItem class="basis-1/3">
+                        <CourseCard :id="course.id" width="w-full" :title="course.name" :price="course.price"
+                            :base64Image="course.background" :score="course.score" :reviews="course.reviews"
+                            :onClick="() => $router.push(`/courses/${course.id}`)" />
+                    </CarouselItem>
+                </template>
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />

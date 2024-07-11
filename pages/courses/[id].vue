@@ -1,20 +1,26 @@
 <script setup lang="ts">
-import { Star, Heart, ShoppingCart } from 'lucide-vue-next';
+import { Star, Heart } from 'lucide-vue-next';
 definePageMeta({ auth: false })
 
 const route = useRoute();
-const price = ref(100);
-const score = ref(4.5);
-const reviews = ref(100);
+
+const data = await $fetch(`http://127.0.0.1:8000/api/courses/${route.params.id}`).then((res: any) => res);
+
+const title = computed(() => data.name);
+const description = computed(() => data.description);
+const img = computed(() => data.background);
+const price = computed(() => data.price);
+const score = computed(() => data.score);
+const reviews = computed(() => data.reviews);
 
 </script>
 
 <template>
     <PageContainer class="container pt-0 gap-2">
-        <NuxtImg src="/loginBackground.jpg" alt="Login Background Image"
+        <NuxtImg :src="img" alt="Login Background Image"
             class="overflow-hidden h-[40vh] object-cover rounded-3xl object-center" />
         <div class="flex flex-row flex-wrap items-center justify-between w-full pt-4">
-            <h1 class="font-bold text-3xl antialiased text-primary">Curso: {{ route.params.id }}</h1>
+            <h1 class="font-bold text-3xl antialiased text-primary">{{ title }}</h1>
             <div class="flex flex-row">
                 <Button :variant="'secondary'" class="font-bold"> Comprar
                 </Button>
@@ -33,11 +39,7 @@ const reviews = ref(100);
         </div>
         <div class="flex flex-col w-full">
             <h2 class="font-bold text-md antialiased text-secondary">Descrição</h2>
-            <p class="text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet reprehenderit, officiis
-                quis
-                est animi ipsa neque adipisci eveniet obcaecati eius odit autem qui velit illum maxime at deleniti
-                maiores
-                alias?</p>
+            <p class="text-sm">{{ description }}</p>
         </div>
     </PageContainer>
 </template>

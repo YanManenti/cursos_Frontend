@@ -20,23 +20,40 @@ import {
     PaginationNext,
     PaginationPrev,
 } from '@/components/ui/pagination'
+
 definePageMeta({ auth: false })
 
+const order_by = ref('ordemAlfabetica');
+const setOrder = (value: string) => {
+    order_by.value = value;
+}
 
-const arrayExample = ref(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"]);
-const itemsPerPage = ref(15);
-const blob = new Blob();
+const namefilter = ref('');
+const setNameFilter = (value: string) => {
+    namefilter.value = value;
+}
 
-const page = ref(1);
+const page = ref(0);
 const setPage = (value: number) => {
     page.value = value;
 }
 
-const computedArray = computed(() => {
-    const start = (page.value - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return arrayExample.value.slice(start, end);
-});
+const limit = ref(15);
+const setLimit = (value: number) => {
+    limit.value = value;
+}
+
+const resData = ref(await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by.value}&namefilter=${namefilter.value}&page=${page.value}&limit=${limit.value}`).then((res: any) => res));
+const setData = (value: any) => {
+    resData.value = value;
+}
+
+const data = computed(() => resData.value.courses);
+const total = computed(() => resData.value.total);
+
+watch([order_by, namefilter, page, limit], async () => {
+    setData(await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by.value}&namefilter=${namefilter.value}&page=${page.value}&limit=${limit.value}`).then((res: any) => res))
+})
 
 </script>
 
@@ -48,7 +65,7 @@ const computedArray = computed(() => {
                     <label for="search" class="text-sm font-semibold">Nome do Curso</label>
                     <Input id="search" name="search" label="Nome"
                         class="border p-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-                        placeholder="Busque pelo nome do curso" />
+                        placeholder="Busque pelo nome do curso" @change="(e: any) => setNameFilter(e.target.value)" />
                 </div>
 
                 <div class="flex flex-col w-[25%] gap-1">
@@ -56,8 +73,8 @@ const computedArray = computed(() => {
                     <Select class="h-fit rounded-md" name="filter" id="filter">
                         <SelectTrigger
                             class="w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary">
-                            <SelectValue class="text-secondary placeholder:text-black"
-                                placeholder="Selecione um Filtro" />
+                            <SelectValue class="text-secondary placeholder:text-black" placeholder="Selecione um Filtro"
+                                @change="(e: any) => setOrder(e.target.value)" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -96,30 +113,30 @@ const computedArray = computed(() => {
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">
-                    <template v-for="(current) in computedArray">
-                        <CourseCard :id="current" width="w-[26rem] border border-secondary" :title="current"
-                            :price="100" :base64Image="blob" :score="3.5" :reviews="200"
-                            :onClick="() => console.log('Clicked')" />
+                    <template v-for="(current) in data" :key="current.id">
+                        <CourseCard :id="current.id" width="w-[26rem] border border-secondary" :title="current.name"
+                            :price="current.price" :base64Image="current.background" :score="current.score"
+                            :reviews="current.reviews" :onClick="() => $router.push(`/${current.id}`)" />
                     </template>
                 </div>
-                <Pagination v-slot="{ page }" :total="arrayExample.length" :items-per-page="itemsPerPage"
-                    :sibling-count="1" show-edges :default-page="1">
+                <Pagination v-slot="{ page }" :total="total" :items-per-page="limit" :sibling-count="1" show-edges
+                    :default-page="1">
                     <PaginationList v-slot="{ items }" class="flex items-center gap-1 w-full justify-center">
-                        <PaginationFirst @click="setPage(1)" />
-                        <PaginationPrev @click="setPage(page - 1)" />
+                        <PaginationFirst @click="setPage(0)" />
+                        <PaginationPrev @click="setPage(page - 2)" />
 
                         <template v-for="(item, index) in items">
                             <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
                                 <Button class="w-10 h-10 p-0" :variant="item.value === page ? 'default' : 'ghost'"
-                                    @click="setPage(item.value)">
+                                    @click="setPage(item.value - 1)">
                                     {{ item.value }}
                                 </Button>
                             </PaginationListItem>
                             <PaginationEllipsis v-else :key="item.type" :index="index" />
                         </template>
 
-                        <PaginationNext @click="setPage(page + 1)" />
-                        <PaginationLast @click="setPage(Math.floor(arrayExample.length / itemsPerPage) + 1)" />
+                        <PaginationNext @click="setPage(page)" />
+                        <PaginationLast @click="setPage(Math.floor(total / limit) - 1)" />
                     </PaginationList>
                 </Pagination>
             </div>
