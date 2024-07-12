@@ -14,6 +14,8 @@ useHead({
   ]
 })
 
+import Toaster from '@/components/ui/toast/Toaster.vue'
+
 const { data, signOut } = useAuth()
 
 // TRANSFORM DATA.AVATAR USING DECODEBASE64IMAGE
@@ -29,6 +31,7 @@ const nav = [
 </script>
 
 <template>
+  <Toaster />
   <div dir="routing/pages" :nav="nav" current-route>
     <div class="bg-white flex flex-row max-h-40 items-center justify-between p-12">
       <div class="flex flex-row items-center gap-x-1">

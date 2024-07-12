@@ -20,10 +20,15 @@ import {
     PaginationNext,
     PaginationPrev,
 } from '@/components/ui/pagination'
+import { useToast } from '@/components/ui/toast/use-toast'
+import { ToastAction } from '@/components/ui/toast'
+
 
 definePageMeta({ auth: false })
 
-const order_by = ref('ordemAlfabetica');
+const { toast } = useToast()
+
+const order_by = ref('');
 const setOrder = (value: string) => {
     order_by.value = value;
 }
@@ -43,17 +48,43 @@ const setLimit = (value: number) => {
     limit.value = value;
 }
 
-const resData = ref(await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by.value}&namefilter=${namefilter.value}&page=${page.value}&limit=${limit.value}`).then((res: any) => res));
+const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, altText: string, errorAction: () => any, errorReturn?: object) => {
+    return await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
+        .then((res: any) => res)
+        .catch((err: any) => {
+            toast({
+                title: errorTitle,
+                description: err.message,
+                variant: 'destructive',
+                action: h(ToastAction, {
+                    altText: altText,
+                }, {
+                    default: errorAction,
+                }),
+            });
+            return errorReturn ? errorReturn : null;
+        });
+}
+
+const clearFilters = async () => {
+    setNameFilter('');
+    setOrder('');
+    setPage(0);
+    setLimit(15);
+    setData(await fetcher(order_by.value, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
+}
+
+const search = async () => {
+    setData(await fetcher(order_by.value, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search))
+}
+
+const resData = ref(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
 const setData = (value: any) => {
     resData.value = value;
 }
 
 const data = computed(() => resData.value.courses);
 const total = computed(() => resData.value.total);
-
-watch([order_by, namefilter, page, limit], async () => {
-    setData(await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by.value}&namefilter=${namefilter.value}&page=${page.value}&limit=${limit.value}`).then((res: any) => res))
-})
 
 </script>
 
@@ -65,16 +96,18 @@ watch([order_by, namefilter, page, limit], async () => {
                     <label for="search" class="text-sm font-semibold">Nome do Curso</label>
                     <Input id="search" name="search" label="Nome"
                         class="border p-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
-                        placeholder="Busque pelo nome do curso" @change="(e: any) => setNameFilter(e.target.value)" />
+                        placeholder="Busque pelo nome do curso" @change="(e: any) => setNameFilter(e.target.value)"
+                        :value="namefilter" />
                 </div>
 
                 <div class="flex flex-col w-[25%] gap-1">
                     <label for="filter" class="text-sm font-semibold">Filtros</label>
-                    <Select class="h-fit rounded-md" name="filter" id="filter">
+                    <Select class="h-fit rounded-md" name="filter" id="filter"
+                        @update:model-value="(e: any) => setOrder(e)" v-model:model-value="order_by">
                         <SelectTrigger
                             class="w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary">
-                            <SelectValue class="text-secondary placeholder:text-black" placeholder="Selecione um Filtro"
-                                @change="(e: any) => setOrder(e.target.value)" />
+                            <SelectValue class="text-secondary placeholder:text-black"
+                                placeholder="Selecione um Filtro" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
@@ -108,8 +141,8 @@ watch([order_by, namefilter, page, limit], async () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <Button :variant="'secondary'" class="w-[10%] font-bold">Limpar</Button>
-                <Button :variant="'default'" class="w-[10%] font-bold">Buscar</Button>
+                <Button :variant="'secondary'" class="w-[10%] font-bold" :onclick="clearFilters">Limpar</Button>
+                <Button :variant="'default'" class="w-[10%] font-bold" :onclick="search">Buscar</Button>
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">

@@ -2,8 +2,7 @@ import { createError, eventHandler, readBody } from "h3";
 import { z } from "zod";
 import { sign } from "jsonwebtoken";
 
-const refreshTokens: Record<number, Record<string, any>> = {};
-export const SECRET = "secret";
+export const SECRET = "PKfXtTlvT/CimBILzFqfC7ftRZGxi23Ub0r6mbG81+0=";
 
 export default eventHandler(async (event) => {
   const regex = new RegExp(
@@ -11,11 +10,11 @@ export default eventHandler(async (event) => {
   );
   const result = z
     .object({
-      username: z.string().min(3).max(10),
       email: z.string().email(),
       password: z.string().regex(regex),
     })
     .safeParse(await readBody(event));
+
   if (!result.success) {
     const errors = result.error.errors.map((error) => error.message);
     throw createError({
@@ -26,28 +25,28 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const expiresIn = "7d";
-  const refreshToken =
-    Math.floor(Math.random() * (1000000000000000 - 1 + 1)) + 1;
-  const { username, email } = result.data;
-  const user = {
-    username,
-    email,
-    avatar: "https://github.com/nuxt.png",
-  };
-
-  const accessToken = sign({ ...user, scope: "user" }, SECRET, {
-    expiresIn,
-  });
-  refreshTokens[refreshToken] = {
-    accessToken,
-    user,
-  };
+  const resData = await fetch(`${process.env.AUTH_ORIGIN}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: result.data.email,
+      password: result.data.password,
+    }),
+  })
+    .then(async (res: any) => await res.json())
+    .catch((err: any) => {
+      throw createError({
+        statusCode: 401,
+        statusMessage: err,
+      });
+    });
 
   return {
     token: {
-      accessToken,
-      refreshToken,
+      accessToken: resData.access_token,
+      refreshToken: resData.refresh_token,
     },
   };
 });

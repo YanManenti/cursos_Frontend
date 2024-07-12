@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import Input from '@/components/ui/input/Input.vue';
 
-
 const { signIn, token, data, status, lastRefreshedAt } = useAuth()
 
-const email = ref('')
-const password = ref('')
+watch(token, () => {
+    console.log('Token changed:', token)
+})
 
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,
     }
 })
+
+const email = ref('')
+
+const password = ref('')
 
 </script>
 

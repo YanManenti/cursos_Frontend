@@ -1,6 +1,5 @@
 import { createError, eventHandler, getRequestHeader, H3Event } from "h3";
 import { verify } from "jsonwebtoken";
-import { SECRET } from "./login.post";
 
 const TOKEN_TYPE = "Bearer";
 
@@ -21,7 +20,7 @@ const ensureAuth = (event: H3Event) => {
 
   const extractedToken = extractToken(authHeaderValue);
   try {
-    return verify(extractedToken, SECRET);
+    return verify(extractedToken, "secret_key");
   } catch (error) {
     console.error("Login failed. Here's the raw error:", error);
     throw createError({
