@@ -3,10 +3,6 @@ import Input from '@/components/ui/input/Input.vue';
 
 const { signIn, token, data, status, lastRefreshedAt } = useAuth()
 
-watch(token, () => {
-    console.log('Token changed:', token)
-})
-
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,

@@ -19,7 +19,7 @@ export default eventHandler(async (event) => {
     const errors = result.error.errors.map((error) => error.message);
     throw createError({
       statusCode: 403,
-      statusMessage: `Invalid input. Please provide a valid username, email and password. Errors: ${errors.join(
+      statusMessage: `Invalid input. Please provide a valid email and password. Errors: ${errors.join(
         ", "
       )}.`,
     });

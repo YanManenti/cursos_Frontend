@@ -22,7 +22,17 @@ import {
 } from '@/components/ui/pagination'
 import { useToast } from '@/components/ui/toast/use-toast'
 import { ToastAction } from '@/components/ui/toast'
-
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import { Plus } from 'lucide-vue-next';
+const { status } = useAuth()
 
 definePageMeta({ auth: false })
 
@@ -48,6 +58,26 @@ const setLimit = (value: number) => {
     limit.value = value;
 }
 
+const name = ref('')
+const setName = (value: string) => {
+    name.value = value
+}
+
+const description = ref('')
+const setDescription = (value: string) => {
+    description.value = value
+}
+
+const price = ref(0)
+const setPrice = (value: number) => {
+    price.value = value
+}
+
+const background = ref('')
+const setBackground = (value: string) => {
+    background.value = value
+}
+
 const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, altText: string, errorAction: () => any, errorReturn?: object) => {
     return await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
         .then((res: any) => res)
@@ -71,11 +101,15 @@ const clearFilters = async () => {
     setOrder('');
     setPage(0);
     setLimit(15);
-    setData(await fetcher(order_by.value, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
+    setData(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
 }
 
 const search = async () => {
-    setData(await fetcher(order_by.value, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search))
+    let order = order_by.value;
+    if (order === '' || order === undefined || order === null) {
+        order = 'ordemAlfabetica';
+    }
+    setData(await fetcher(order, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search))
 }
 
 const resData = ref(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
@@ -83,13 +117,91 @@ const setData = (value: any) => {
     resData.value = value;
 }
 
-const data = computed(() => resData.value.courses);
+const clearForm = () => {
+    setName('');
+    setDescription('');
+    setPrice(0);
+    setBackground('');
+}
+
+const register = async () => {
+    await $fetch(`http://127.0.0.1:8000/api/courses/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: name.value,
+            description: description.value,
+            price: price.value,
+            background: background.value,
+        }),
+    }).then((res: any) => {
+        if (res) {
+            toast({
+                title: 'Curso cadastrado',
+                description: 'Seu curso foi cadastrado com sucesso!',
+            });
+            clearForm();
+        }
+    }).catch((err: any) => {
+        toast({
+            title: 'Erro ao cadastrar curso',
+            description: err.message,
+            variant: 'destructive',
+        });
+    });
+}
+
+const coursesData = computed(() => resData.value.courses);
 const total = computed(() => resData.value.total);
 
 </script>
 
 <template>
     <PageContainer class="container">
+
+        <Dialog v-if="status === 'authenticated'">
+            <DialogTrigger as-child>
+                <Button class="fixed bottom-3 right-3 px-2 py-2">
+                    <Plus />
+                </Button>
+            </DialogTrigger>
+            <DialogContent class="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle class="text-primary">Crie o seu Curso!</DialogTitle>
+                    <DialogDescription>
+                        Complete as informações abaixo para criar um novo curso.
+                    </DialogDescription>
+                </DialogHeader>
+                <form @submit.prevent="register">
+                    <div class="flex flex-col gap-2">
+                        <div class="w-full flex flex-col items-center gap-1.5">
+                            <label class="font-bold">Background</label>
+                            <img v-if="background" :src="background"
+                                class="w-full h-fit max-h-80 rounded-md object-cover" />
+                            <label for="image_input"
+                                class="text-sm border-4 rounded p-2 cursor-pointer hover:text-primary hover:border-primary">Escolher
+                                Imagem</label>
+                            <input type="file" id="image_input" accept="image/jpeg, image/png, image/jpg"
+                                multiple="false" class="hidden"
+                                v-on:change="async (e: any) => setBackground(await decodeBase64Image(e.target.files[0]))" />
+                        </div>
+                        <label for="name" class="font-bold">Nome</label>
+                        <Input id="name" name="name" type="text" placeholder="Nome" v-model="name" required />
+                        <label for="description" class="font-bold">Descrição</label>
+                        <Input id="description" name="description" type="text" placeholder="Descrição"
+                            v-model="description" required />
+                        <label for="price" class="font-bold">Preço</label>
+                        <Input id="price" name="price" type="number" placeholder="Preço" v-model="price" required />
+
+                        <Button type="submit" class="font-bold">
+                            Cadastrar
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
         <div class="w-full flex flex-col gap-4">
             <div class="flex flex-row gap-2 items-end">
                 <div class="flex flex-col w-[55%] gap-1">
@@ -97,7 +209,7 @@ const total = computed(() => resData.value.total);
                     <Input id="search" name="search" label="Nome"
                         class="border p-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                         placeholder="Busque pelo nome do curso" @change="(e: any) => setNameFilter(e.target.value)"
-                        :value="namefilter" />
+                        v-model:model-value="namefilter" />
                 </div>
 
                 <div class="flex flex-col w-[25%] gap-1">
@@ -146,7 +258,7 @@ const total = computed(() => resData.value.total);
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">
-                    <template v-for="(current) in data" :key="current.id">
+                    <template v-for="(current) in coursesData" :key="current.id">
                         <CourseCard :id="current.id" width="w-[26rem] border border-secondary" :title="current.name"
                             :price="current.price" :base64Image="current.background" :score="current.score"
                             :reviews="current.reviews" :onClick="() => $router.push(`/${current.id}`)" />

@@ -18,7 +18,19 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
 
 const { data, signOut } = useAuth()
 
+const avatar = ref('')
+const setAvatar = (value: string) => {
+  avatar.value = value
+}
+
 // TRANSFORM DATA.AVATAR USING DECODEBASE64IMAGE
+
+watch(data, async () => {
+  if (data.value) {
+    const avatarString = await $fetch(`http://127.0.0.1:8000/api/users/avatar/${data.value.subject.id}`).then((res: any) => res)
+    setAvatar(avatarString.avatar)
+  }
+})
 
 const nav = [
   { label: 'Início', to: '/' },
@@ -51,8 +63,8 @@ const nav = [
       </div>
       <div v-if="data">
         <div class="flex flex-row items-center gap-x-2">
-          <p class="font-semibold text-lg">Bem vindo, {{ "Placeholder" }}</p>
-          <img :src="data.avatar" class="max-h-10 rounded-full object-cover" />
+          <p class="font-semibold text-lg">Bem vindo, {{ data.subject.name }}</p>
+          <img :src="avatar" class="w-14 h-14 rounded-full object-cover" />
           <Button :variant="'ghost'" @click="signOut()">
             <p class="font-semibold text-base">Sair</p>
           </Button>

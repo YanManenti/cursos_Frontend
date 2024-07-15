@@ -7,6 +7,7 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+
   ssr: false,
   css: ["~/assets/css/main.css"],
 
@@ -58,24 +59,30 @@ export default defineNuxtConfig({
   auth: {
     baseURL: "/api/auth",
     provider: {
-      type: "local",
+      type: "refresh",
       endpoints: {
         signIn: { path: "/login", method: "post" },
         signOut: { path: "/logout", method: "post" },
-        signUp: { path: "/register", method: "post" },
-        // getSession: { path: "/session", method: "get" },
+        getSession: { path: "/user", method: "get" },
+        refresh: { path: "/refresh", method: "post" },
       },
       pages: {
         login: "/",
       },
       token: {
         signInResponseTokenPointer: "/token/accessToken",
+        maxAgeInSeconds: 60 * 60 * 24 * 2,
+        sameSiteAttribute: "lax",
+      },
+      refreshToken: {
+        signInResponseRefreshTokenPointer: "/token/refreshToken",
+        maxAgeInSeconds: 60 * 60 * 24 * 2,
       },
       session: {
         dataType: {
+          id: "string",
           email: "string",
           username: "string",
-          avatar: "string",
         },
         dataResponsePointer: "/",
       },
@@ -88,4 +95,6 @@ export default defineNuxtConfig({
     },
     globalAppMiddleware: true,
   },
+
+  compatibilityDate: "2024-07-15",
 });
