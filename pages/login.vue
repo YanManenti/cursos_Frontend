@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import Input from '@/components/ui/input/Input.vue';
 
-const { signIn, token, data, status, lastRefreshedAt } = useAuth()
+const { signIn } = useAuth()
+
+useHead({
+    title: 'Login - IMTESTE',
+})
 
 definePageMeta({
-    auth: {
-        unauthenticatedOnly: true,
-    }
+    auth: false
 })
 
 const email = ref('')
@@ -22,11 +24,8 @@ const password = ref('')
             <p class="text-sm py-2 text-gray-400">Bem-vindo de volta ao IMTESTE! Continue sua jornada
                 de aprendizado e
                 conquiste novos conhecimentos. Aproveite ao máximo nossos cursos e recursos exclusivos!</p>
-            <p>Status: {{ status }}</p>
-            <p>Data: {{ data || 'no session data present, are you logged in?' }}</p>
-            <p>Last refreshed at: {{ lastRefreshedAt || 'no refresh happened' }}</p>
-            <p class="text-sm">JWT token: {{ token || 'no token present, are you logged in?' }}</p>
-            <form @submit.prevent="signIn({ email, password })">
+
+            <form @submit.prevent="signIn({ email, password }, { callbackUrl: '/' })">
                 <div class="flex flex-col gap-2">
                     <label for="email" class="font-bold">Email</label>
                     <Input id="email" name="email" type="text" placeholder="Email" v-model="email" required />

@@ -1,5 +1,7 @@
-<script lang="ts">
-
+<script setup lang="ts">
+useHead({
+    title: 'Blog - IMTESTE',
+})
 definePageMeta({ auth: false })
 </script>
 

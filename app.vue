@@ -10,20 +10,27 @@ useHead({
     {
       name: 'viewport',
       content: 'width=device-width, initial-scale=1.0'
-    }
+    },
+    {
+      name: 'Cache-Control',
+      content: 'no-store, must-revalidate'
+    },
+    {
+      name: 'Pragma',
+      content: 'no-cache'
+    },
+
   ]
 })
 
 import Toaster from '@/components/ui/toast/Toaster.vue'
 
-const { data, signOut } = useAuth()
+const { status, data, signOut } = useAuth()
 
-const avatar = ref('')
+const avatar = ref(data.value ? await $fetch(`http://127.0.0.1:8000/api/users/avatar/${data.value.subject.id}`).then((res: any) => res.avatar) : '')
 const setAvatar = (value: string) => {
   avatar.value = value
 }
-
-// TRANSFORM DATA.AVATAR USING DECODEBASE64IMAGE
 
 watch(data, async () => {
   if (data.value) {
@@ -38,6 +45,7 @@ const nav = [
   { label: 'Blog', to: '/blog' },
   { label: 'Login', to: '/login' },
   { label: 'Cadastro', to: '/register' },
+  { label: 'Perfil', to: '/profile' }
 ]
 
 </script>
@@ -61,11 +69,12 @@ const nav = [
           <p class="font-semibold text-lg">Blog</p>
         </Button>
       </div>
-      <div v-if="data">
+      <div v-if="status === 'authenticated'">
         <div class="flex flex-row items-center gap-x-2">
           <p class="font-semibold text-lg">Bem vindo, {{ data.subject.name }}</p>
-          <img :src="avatar" class="w-14 h-14 rounded-full object-cover" />
-          <Button :variant="'ghost'" @click="signOut()">
+          <NuxtImg :src="avatar" class="w-14 h-14 rounded-full object-cover cursor-pointer"
+            @click="async () => await navigateTo('/profile')" />
+          <Button :variant="'ghost'" @click="() => signOut({ callbackUrl: '/', external: true })">
             <p class="font-semibold text-base">Sair</p>
           </Button>
         </div>

@@ -34,6 +34,10 @@ import {
 import { Plus } from 'lucide-vue-next';
 const { status } = useAuth()
 
+useHead({
+    title: 'Cursos - IMTESTE',
+})
+
 definePageMeta({ auth: false })
 
 const { toast } = useToast()
@@ -260,8 +264,9 @@ const total = computed(() => resData.value.total);
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">
                     <template v-for="(current) in coursesData" :key="current.id">
                         <CourseCard :id="current.id" width="w-[26rem] border border-secondary" :title="current.name"
-                            :price="current.price" :base64Image="current.background" :score="current.score"
-                            :reviews="current.reviews" :onClick="() => $router.push(`/${current.id}`)" />
+                            :description="current.description" :price="current.price" :base64Image="current.background"
+                            :score="current.score" :reviews="current.reviews"
+                            :onClick="() => $router.push(`/${current.id}`)" />
                     </template>
                 </div>
                 <Pagination v-slot="{ page }" :total="total" :items-per-page="limit" :sibling-count="1" show-edges

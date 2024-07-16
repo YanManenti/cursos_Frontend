@@ -8,6 +8,11 @@ const router = useRouter()
 
 const { toast } = useToast()
 
+useHead({
+    title: 'Cadastro - IMTESTE',
+})
+
+
 definePageMeta({
     auth: {
         unauthenticatedOnly: true,
@@ -41,19 +46,59 @@ const clear = () => {
 }
 
 const register = async () => {
+    if (!name.value || !email.value || !password.value || !avatar.value) {
+        toast({
+            title: 'Erro ao cadastrar',
+            description: 'Preencha todos os campos',
+            variant: 'destructive',
+        })
+        return
+    }
+    if (password.value.length < 8) {
+        toast({
+            title: 'Erro ao cadastrar',
+            description: 'A senha deve ter no mínimo 8 caracteres',
+            variant: 'destructive',
+        })
+        return
+    }
+    if (!/[A-Z]/.test(password.value)) {
+        toast({
+            title: 'Erro ao cadastrar',
+            description: 'A senha deve ter no mínimo 1 letra maiúscula',
+            variant: 'destructive',
+        })
+        return
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password.value)) {
+        toast({
+            title: 'Erro ao cadastrar',
+            description: 'A senha deve ter no mínimo 1 caractere especial',
+            variant: 'destructive',
+        })
+        return
+    }
+    if (!/[0-9]/.test(password.value)) {
+        toast({
+            title: 'Erro ao cadastrar',
+            description: 'A senha deve ter no mínimo 1 número',
+            variant: 'destructive',
+        })
+        return
+    }
     await $fetch(`http://127.0.0.1:8000/api/users/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            name: name.value,
-            email: email.value,
+            name: name.value.trim(),
+            email: email.value.trim(),
             password: password.value,
             avatar: avatar.value,
         }),
     }).then(async (res: any) => {
-        if (res.status === 201) {
+        if (res.id) {
             await signIn({ email: email.value, password: password.value })
                 .then(() => {
                     clear();
@@ -74,9 +119,10 @@ const register = async () => {
         })
         clear();
     }).catch((err: any) => {
+        console.log(err);
         toast({
             title: 'Erro ao cadastrar',
-            description: err.message,
+            description: err.data.detail,
             variant: 'destructive',
         })
     })
@@ -106,10 +152,16 @@ const register = async () => {
                     <label for="name" class="font-bold">Name</label>
                     <Input id="name" name="name" type="text" placeholder="Name" v-model="name" required />
                     <label for="email" class="font-bold">Email</label>
-                    <Input id="email" name="email" type="text" placeholder="Email" v-model="email" required />
+                    <Input id="email" name="email" type="email" placeholder="Email" v-model="email" required />
                     <label for="password" class="font-bold">Password</label>
                     <Input id="password" name="password" type="password" placeholder="Password" v-model="password"
                         required />
+                    <div class="flex flex-col gap-y-1">
+                        <p class="text-sm text-gray-400">* Mínimo 8 caracteres.</p>
+                        <p class="text-sm text-gray-400">* Mínimo 1 letra maiúscula.</p>
+                        <p class="text-sm text-gray-400">* Mínimo 1 caractere especial.</p>
+                        <p class="text-sm text-gray-400">* Mínimo 1 número.</p>
+                    </div>
                     <Button type="submit" class="font-bold">
                         Cadastrar
                     </Button>

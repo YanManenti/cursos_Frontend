@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Star } from 'lucide-vue-next';
-import decodeBase64Image from '@/utils/decodeBase64Image.js'
 const CourseCardProps = defineProps<{
     id: string
     width: string
     title: string
+    description: string
     price: number
     base64Image: string
     score: number
@@ -20,10 +20,11 @@ const containerClass = `${CourseCardProps.width} h-full bg-white rounded-lg shad
 <template>
     <div :class="containerClass" @click="$router.push(`/courses/${id}`)">
         <div class="h-full flex flex-col gap-y-2 justify-between">
-            <div class="flex flex-col justify-start gap-y-2">
+            <div class="flex flex-col justify-start gap-y-1">
                 <img v-bind:src="CourseCardProps.base64Image" class="rounded-lg max-h-40 object-cover"
                     alt="Course image" />
-                <h1 class="font-bold text-lg">{{ title }}</h1>
+                <h1 class="font-bold text-lg break-normal line-clamp-2">{{ title }}</h1>
+                <p class="text-sm break-normal line-clamp-2 min-h-10">{{ description }}</p>
             </div>
             <div class="flex flex-row items-center justify-between ">
                 <p class="font-semibold text-lg text-primary">R$ {{ price }}</p>

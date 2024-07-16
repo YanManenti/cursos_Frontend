@@ -1,11 +1,16 @@
 <script setup lang="ts">
-definePageMeta({ auth: false })
 import Carousel from '@/components/ui/carousel/Carousel.vue';
 import CarouselContent from '@/components/ui/carousel/CarouselContent.vue';
 import CarouselItem from '@/components/ui/carousel/CarouselItem.vue';
 import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
 import { ArrowRight } from 'lucide-vue-next';
+
+useHead({
+    title: 'IMTESTE',
+})
+
+definePageMeta({ auth: false })
 
 const data = await $fetch('http://127.0.0.1:8000/api/courses/').then((res: any) => res.courses);
 
@@ -53,8 +58,8 @@ const courses = ref(data);
                 <template v-for="(course) in courses">
                     <CarouselItem class="basis-1/3">
                         <CourseCard :id="course.id" width="w-full" :title="course.name" :price="course.price"
-                            :base64Image="course.background" :score="course.score" :reviews="course.reviews"
-                            :onClick="() => $router.push(`/courses/${course.id}`)" />
+                            :description="course.description" :base64Image="course.background" :score="course.score"
+                            :reviews="course.reviews" :onClick="() => $router.push(`/courses/${course.id}`)" />
                     </CarouselItem>
                 </template>
             </CarouselContent>

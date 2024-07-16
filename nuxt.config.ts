@@ -57,6 +57,10 @@ export default defineNuxtConfig({
   },
 
   auth: {
+    isEnabled: true,
+    globalAppMiddleware: {
+      isEnabled: true,
+    },
     baseURL: "/api/auth",
     provider: {
       type: "refresh",
@@ -67,7 +71,7 @@ export default defineNuxtConfig({
         refresh: { path: "/refresh", method: "post" },
       },
       pages: {
-        login: "/",
+        login: "/login",
       },
       token: {
         signInResponseTokenPointer: "/token/accessToken",
@@ -91,9 +95,8 @@ export default defineNuxtConfig({
       // Whether to refresh the session every time the browser window is refocused.
       enableOnWindowFocus: true,
       // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
-      enablePeriodically: false,
+      enablePeriodically: 60 * 60 * 24,
     },
-    globalAppMiddleware: true,
   },
 
   compatibilityDate: "2024-07-15",

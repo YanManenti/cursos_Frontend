@@ -1,8 +1,5 @@
 import { createError, eventHandler, readBody } from "h3";
 import { z } from "zod";
-import { sign } from "jsonwebtoken";
-
-export const SECRET = "PKfXtTlvT/CimBILzFqfC7ftRZGxi23Ub0r6mbG81+0=";
 
 export default eventHandler(async (event) => {
   const regex = new RegExp(

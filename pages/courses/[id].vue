@@ -17,7 +17,8 @@ type Course = {
 };
 
 definePageMeta({ auth: false })
-const { status, data, token } = useAuth()
+
+const { status, token } = useAuth()
 const { toast } = useToast()
 const route = useRoute();
 
@@ -34,6 +35,10 @@ const score = computed(() => courseData.value.score);
 const reviews = computed(() => courseData.value.reviews);
 const interested = computed(() => courseData.value.interested_list);
 
+useHead({
+    title: `${title.value} - IMTESTE`,
+})
+
 const handleInterest = async () => {
     const response = await $fetch(`http://127.0.0.1:8000/api/courses/${route.params.id}/add-interested`, {
         headers: {
@@ -46,9 +51,10 @@ const handleInterest = async () => {
     })
         .then((res: any) => res)
         .catch((err: any) => {
+            console.log(err);
             toast({
                 title: 'Erro ao se interessar',
-                description: err.message,
+                description: err.cause.message,
                 variant: 'destructive',
             });
         });
