@@ -36,6 +36,7 @@ export default eventHandler(async (event) => {
   })
     .then(async (res: any) => await res.json())
     .catch((err: any) => {
+      console.log("o erro é aqui");
       throw createError({
         statusCode: 401,
         data: {
