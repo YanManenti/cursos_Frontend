@@ -34,15 +34,15 @@ export default eventHandler(async (event) => {
       password: result.data.password,
     }),
   })
-    .then(async (res: any) => await res.json())
+    .then(async (res: any) => {
+      console.log(res);
+      return res.json();
+    })
     .catch((err: any) => {
-      console.log("o erro é aqui");
-      throw createError({
-        statusCode: 401,
-        data: {
-          detail: err.message,
-        },
-      });
+      err.data = {
+        detail: err.message,
+      };
+      throw err;
     });
 
   return {
