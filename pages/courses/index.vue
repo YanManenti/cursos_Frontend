@@ -21,7 +21,6 @@ import {
     PaginationPrev,
 } from '@/components/ui/pagination'
 import { useToast } from '@/components/ui/toast/use-toast'
-import { ToastAction } from '@/components/ui/toast'
 import {
     Dialog,
     DialogContent,
@@ -32,6 +31,9 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import { Plus } from 'lucide-vue-next';
+import nuxtConfig from '@/nuxt.config';
+const runtimeConfig = useRuntimeConfig()
+
 const { status } = useAuth()
 
 useHead({
@@ -41,6 +43,20 @@ useHead({
 definePageMeta({ auth: false })
 
 const { toast } = useToast()
+
+const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, errorReturn?: object) => {
+    return await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
+        .then((res: any) => res)
+        .catch((err: any) => {
+            toast({
+                title: errorTitle,
+                description: err.data.detail,
+                variant: 'destructive',
+            })
+
+            return errorReturn ? errorReturn : null;
+        });
+}
 
 const order_by = ref('');
 const setOrder = (value: string) => {
@@ -82,30 +98,11 @@ const setBackground = (value: string) => {
     background.value = value
 }
 
-const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, altText: string, errorAction: () => any, errorReturn?: object) => {
-    return await $fetch(`http://127.0.0.1:8000/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
-        .then((res: any) => res)
-        .catch((err: any) => {
-            toast({
-                title: errorTitle,
-                description: err.message,
-                variant: 'destructive',
-                action: h(ToastAction, {
-                    altText: altText,
-                }, {
-                    default: errorAction,
-                }),
-            });
-            return errorReturn ? errorReturn : null;
-        });
-}
 
-const clearFilters = async () => {
-    setNameFilter('');
-    setOrder('');
-    setPage(0);
-    setLimit(15);
-    setData(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
+
+const resData = ref(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos'));
+const setData = (value: any) => {
+    resData.value = value;
 }
 
 const search = async () => {
@@ -113,12 +110,16 @@ const search = async () => {
     if (order === '' || order === undefined || order === null) {
         order = 'ordemAlfabetica';
     }
-    setData(await fetcher(order, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search))
+    const res = await fetcher(order, namefilter.value, page.value, limit.value, 'Erro ao buscar cursos');
+    setData(res);
 }
 
-const resData = ref(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos', 'Tentar novamente', search));
-const setData = (value: any) => {
-    resData.value = value;
+const clearFilters = async () => {
+    setNameFilter('');
+    setOrder('');
+    setPage(0);
+    setLimit(15);
+    setData(await fetcher('ordemAlfabetica', '', page.value, limit.value, 'Erro ao buscar cursos'));
 }
 
 const clearForm = () => {
@@ -129,7 +130,7 @@ const clearForm = () => {
 }
 
 const register = async () => {
-    await $fetch(`http://127.0.0.1:8000/api/courses/`, {
+    await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -151,20 +152,44 @@ const register = async () => {
     }).catch((err: any) => {
         toast({
             title: 'Erro ao cadastrar curso',
-            description: err.message,
+            description: err.data.detail,
             variant: 'destructive',
         });
     });
+    search();
 }
+
+const handleDelete = async (id: string) => {
+    await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${id}`, {
+        method: 'DELETE',
+    }).then((res: any) => {
+        if (res) {
+            toast({
+                title: 'Curso excluído',
+                description: 'Seu curso foi excluído com sucesso!',
+            });
+            clearForm();
+        }
+    }).catch((err: any) => {
+        toast({
+            title: 'Erro ao excluir curso',
+            description: err.data.detail,
+            variant: 'destructive',
+        });
+    });
+    search();
+}
+
 
 const coursesData = computed(() => resData.value.courses);
 const total = computed(() => resData.value.total);
+
+
 
 </script>
 
 <template>
     <PageContainer class="container">
-
         <Dialog v-if="status === 'authenticated'">
             <DialogTrigger as-child>
                 <Button class="fixed bottom-3 right-3 px-2 py-2">
@@ -262,11 +287,12 @@ const total = computed(() => resData.value.total);
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">
-                    <template v-for="(current) in coursesData" :key="current.id">
+                    <template v-model="resData" v-for="(current) in coursesData" :key="current.id">
                         <CourseCard :id="current.id" width="w-[26rem] border border-secondary" :title="current.name"
                             :description="current.description" :price="current.price" :base64Image="current.background"
                             :score="current.score" :reviews="current.reviews"
-                            :onClick="() => $router.push(`/${current.id}`)" />
+                            :onClick="() => $router.push(`/${current.id}`)" :onDelete="() => handleDelete(current.id)"
+                            @close="() => search()" />
                     </template>
                 </div>
                 <Pagination v-slot="{ page }" :total="total" :items-per-page="limit" :sibling-count="1" show-edges

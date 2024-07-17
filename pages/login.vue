@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import Input from '@/components/ui/input/Input.vue';
 
-const { signIn } = useAuth()
+const { signIn, status } = useAuth()
+
+if (status && status.value === 'authenticated') {
+    navigateTo('/')
+}
+// Eu tive que usar o método acima pq o definePageMeta não está funcionando?
+//
+// definePageMeta({
+//      auth: { unauthenticatedOnly: true, navigateAuthenticatedTo: '/'}
+// })
 
 useHead({
     title: 'Login - IMTESTE',

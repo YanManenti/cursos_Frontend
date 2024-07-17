@@ -2,6 +2,8 @@ import { createError, eventHandler, readBody } from "h3";
 import { z } from "zod";
 
 export default eventHandler(async (event) => {
+  const runtimeConfig = useRuntimeConfig();
+
   const regex = new RegExp(
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
   );
@@ -16,13 +18,13 @@ export default eventHandler(async (event) => {
     const errors = result.error.errors.map((error) => error.message);
     throw createError({
       statusCode: 403,
-      statusMessage: `Invalid input. Please provide a valid email and password. Errors: ${errors.join(
-        ", "
-      )}.`,
+      data: {
+        detail: errors.join(", "),
+      },
     });
   }
 
-  const resData = await fetch(`${process.env.AUTH_ORIGIN}/login`, {
+  const resData = await fetch(`${runtimeConfig.app.apiUrl}/api/users/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +38,9 @@ export default eventHandler(async (event) => {
     .catch((err: any) => {
       throw createError({
         statusCode: 401,
-        statusMessage: err,
+        data: {
+          detail: err.message,
+        },
       });
     });
 

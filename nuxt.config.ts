@@ -12,7 +12,9 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   runtimeConfig: {
-    Origin: process.env.AUTH_ORIGIN,
+    app: {
+      apiUrl: process.env.AUTH_API,
+    },
   },
 
   vue: {
@@ -93,7 +95,7 @@ export default defineNuxtConfig({
     },
     sessionRefresh: {
       // Whether to refresh the session every time the browser window is refocused.
-      enableOnWindowFocus: true,
+      enableOnWindowFocus: false,
       // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
       enablePeriodically: 60 * 60 * 24,
     },

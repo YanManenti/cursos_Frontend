@@ -1,6 +1,8 @@
 import { createError, eventHandler, getRequestHeader, H3Event } from "h3";
 
 const ensureAuth = async (event: H3Event) => {
+  const runtimeConfig = useRuntimeConfig();
+
   const authHeaderValue = getRequestHeader(event, "authorization");
   if (typeof authHeaderValue === "undefined") {
     throw createError({
@@ -11,7 +13,7 @@ const ensureAuth = async (event: H3Event) => {
   }
 
   try {
-    const resData = await $fetch(`${process.env.AUTH_ORIGIN}/me`, {
+    const resData = await $fetch(`${runtimeConfig.app.apiUrl}/api/users/me`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${authHeaderValue}`,
@@ -24,7 +26,9 @@ const ensureAuth = async (event: H3Event) => {
       .catch((err: any) => {
         throw createError({
           statusCode: 401,
-          statusMessage: err,
+          data: {
+            detail: err.message,
+          },
         });
       });
 
@@ -33,7 +37,9 @@ const ensureAuth = async (event: H3Event) => {
     console.error("Login failed. Here's the raw error:", error);
     throw createError({
       statusCode: 403,
-      statusMessage: "You must be logged in to use this endpoint",
+      data: {
+        detail: "You must be logged in to access this endpoint",
+      },
     });
   }
 };

@@ -6,13 +6,16 @@ import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
 import { ArrowRight } from 'lucide-vue-next';
 
+
+const runtimeConfig = useRuntimeConfig()
+
 useHead({
     title: 'IMTESTE',
 })
 
 definePageMeta({ auth: false })
 
-const data = await $fetch('http://127.0.0.1:8000/api/courses/').then((res: any) => res.courses);
+const data = await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/`).then((res: any) => res.courses);
 
 const courses = ref(data);
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useToast } from '@/components/ui/toast';
 import { Star, Heart } from 'lucide-vue-next';
+const runtimeConfig = useRuntimeConfig()
 
 type Course = {
     id: number;
@@ -22,7 +23,7 @@ const { status, token } = useAuth()
 const { toast } = useToast()
 const route = useRoute();
 
-const courseData = ref(await $fetch(`http://127.0.0.1:8000/api/courses/${route.params.id}`).then((res: any) => res))
+const courseData = ref(await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${route.params.id}`).then((res: any) => res))
 const setCourseData = (value: Course) => {
     courseData.value = value;
 }
@@ -40,7 +41,7 @@ useHead({
 })
 
 const handleInterest = async () => {
-    const response = await $fetch(`http://127.0.0.1:8000/api/courses/${route.params.id}/add-interested`, {
+    const response = await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${route.params.id}/add-interested`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${token.value}`,
@@ -54,7 +55,7 @@ const handleInterest = async () => {
             console.log(err);
             toast({
                 title: 'Erro ao se interessar',
-                description: err.cause.message,
+                description: err.data.detail,
                 variant: 'destructive',
             });
         });
@@ -76,7 +77,7 @@ const handleInterest = async () => {
         <div class="flex flex-row flex-wrap items-center justify-between w-full pt-4">
             <h1 class="font-bold text-3xl antialiased text-primary">{{ title }}</h1>
             <div class="flex flex-row">
-                <Button :variant="'secondary'" class="font-bold"> Comprar
+                <Button :variant="'secondary'" class="font-bold" @click="$router.push('/login')"> Comprar
                 </Button>
                 <Button v-if="status === 'authenticated'" :variant="'ghost'" class="font-bold" @click="handleInterest">
                     <Heart class="w-10 h-10 text-red-600 fill-red-600 hover:text-red-600/80 hover:fill-red-600" />

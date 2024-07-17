@@ -2,9 +2,19 @@
 import Input from '@/components/ui/input/Input.vue';
 import { useToast } from '@/components/ui/toast';
 
-const { signIn } = useAuth()
 
-const router = useRouter()
+const runtimeConfig = useRuntimeConfig()
+
+const { signIn, status } = useAuth()
+
+if (status && status.value === 'authenticated') {
+    navigateTo('/')
+}
+// Eu tive que usar o método acima pq o definePageMeta não está funcionando?
+//
+// definePageMeta({
+//      auth: { unauthenticatedOnly: true, navigateAuthenticatedTo: '/'}
+// })
 
 const { toast } = useToast()
 
@@ -86,7 +96,7 @@ const register = async () => {
         })
         return
     }
-    await $fetch(`http://127.0.0.1:8000/api/users/`, {
+    await $fetch(`${runtimeConfig.app.apiUrl}/api/users/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -102,12 +112,12 @@ const register = async () => {
             await signIn({ email: email.value, password: password.value })
                 .then(() => {
                     clear();
-                    router.push('/');
+                    navigateTo('/courses');
                 })
                 .catch((err: any) => {
                     toast({
                         title: 'Erro ao logar',
-                        description: err.message,
+                        description: err.data?.detail,
                         variant: 'destructive',
                     })
                 })
@@ -122,7 +132,7 @@ const register = async () => {
         console.log(err);
         toast({
             title: 'Erro ao cadastrar',
-            description: err.data.detail,
+            description: err.data?.detail,
             variant: 'destructive',
         })
     })
