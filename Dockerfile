@@ -1,13 +1,12 @@
 # Dockerfile
-FROM node:20.9-alpine
+FROM node:18-bookworm
 
 # create destination directory
 RUN mkdir -p /usr/src/nuxt-app
 WORKDIR /usr/src/nuxt-app
 
 # update and install dependency
-RUN apk update && apk upgrade
-RUN apk add git
+RUN apt update
 
 # copy the app, note .dockerignore
 COPY . /usr/src/nuxt-app/
@@ -16,8 +15,11 @@ RUN npm run build
 
 EXPOSE 3000
 
-ENV NUXT_NEXTAUTH_SECRET=PKfXtTlvT/CimBILzFqfC7ftRZGxi23Ub0r6mbG81+0=
+ENV HOST="0.0.0.0"
+ENV NUXT_NEXTAUTH_SECRET="PKfXtTlvT/CimBILzFqfC7ftRZGxi23Ub0r6mbG81+0="
 ENV AUTH_API="http://172.18.0.3:8000"
+ENV BACK_API="127.0.0.1:8000"
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+ENV AUTH_ORIGIN="http://127.0.0.1:3000/api/auth/"
 
 CMD [ "node", ".output/server/index.mjs" ]

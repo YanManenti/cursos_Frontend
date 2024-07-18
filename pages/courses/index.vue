@@ -45,8 +45,8 @@ definePageMeta({ auth: false })
 const { toast } = useToast()
 
 const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, errorReturn?: object) => {
-    return await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
-        .then((res: any) => res)
+    return await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
+        .then(async (res: any) => await res.json())
         .catch((err: any) => {
             toast({
                 title: errorTitle,
@@ -130,7 +130,7 @@ const clearForm = () => {
 }
 
 const register = async () => {
-    await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/`, {
+    await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ const register = async () => {
 }
 
 const handleDelete = async (id: string) => {
-    await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${id}`, {
+    await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${id}`, {
         method: 'DELETE',
     }).then((res: any) => {
         if (res) {

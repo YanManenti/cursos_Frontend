@@ -24,20 +24,20 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const resData = await fetch(`${runtimeConfig.app.apiUrl}/api/users/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: result.data.email,
-      password: result.data.password,
-    }),
-  })
-    .then(async (res: any) => {
-      console.log(res);
-      return res.json();
-    })
+  const resData = await fetch(
+    `http://${runtimeConfig.app.BACK_API}/api/users/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: result.data.email,
+        password: result.data.password,
+      }),
+    }
+  )
+    .then(async (res: any) => await res.json())
     .catch((err: any) => {
       err.data = {
         detail: err.message,

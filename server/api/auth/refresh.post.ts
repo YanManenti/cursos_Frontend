@@ -14,19 +14,18 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const resData = await $fetch(
-    `${runtimeConfig.app.apiUrl}/api/users/refresh`,
+  const resData = await fetch(
+    `http://${runtimeConfig.app.BACK_API}/api/users/refresh`,
     {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${body.refreshToken}`,
       },
       method: "POST",
-      withCredentials: true,
       credentials: "include",
     }
   )
-    .then(async (res: any) => res)
+    .then(async (res: any) => await res.json())
     .catch((err: any) => {
       throw createError({
         statusCode: 401,

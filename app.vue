@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+const runtimeConfig = useRuntimeConfig()
+
 useHead({
   title: 'IMTESTE',
   meta: [
@@ -27,14 +29,14 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
 
 const { status, data, signOut } = useAuth()
 
-const avatar = ref(data.value ? await $fetch(`http://127.0.0.1:8000/api/users/avatar/${data.value.subject.id}`).then((res: any) => res.avatar) : '')
+const avatar = ref(data.value ? await fetch(`http://${runtimeConfig.app.BACK_API}/api/users/avatar/${data.value.subject.id}`).then(async (res: any) => await res.json().then((data: any) => data.avatar)) : '')
 const setAvatar = (value: string) => {
   avatar.value = value
 }
 
 watch(data, async () => {
   if (data.value) {
-    const avatarString = await $fetch(`http://127.0.0.1:8000/api/users/avatar/${data.value.subject.id}`).then((res: any) => res)
+    const avatarString = await fetch(`http://${runtimeConfig.app.BACK_API}/api/users/avatar/${data.value.subject.id}`).then(async (res: any) => await res.json())
     setAvatar(avatarString.avatar)
   }
 })

@@ -23,7 +23,7 @@ const { status, token } = useAuth()
 const { toast } = useToast()
 const route = useRoute();
 
-const courseData = ref(await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${route.params.id}`).then((res: any) => res))
+const courseData = ref(await $fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}`).then((res: any) => res))
 const setCourseData = (value: Course) => {
     courseData.value = value;
 }
@@ -41,13 +41,12 @@ useHead({
 })
 
 const handleInterest = async () => {
-    const response = await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/${route.params.id}/add-interested`, {
+    const response = await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}/add-interested`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${token.value}`,
         },
         method: 'PATCH',
-        withCredentials: true,
         credentials: 'include',
     })
         .then((res: any) => res)

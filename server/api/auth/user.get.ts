@@ -13,16 +13,19 @@ const ensureAuth = async (event: H3Event) => {
   }
 
   try {
-    const resData = await $fetch(`${runtimeConfig.app.apiUrl}/api/users/me`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${authHeaderValue}`,
-      },
-      method: "GET",
-      withCredentials: true,
-      credentials: "include",
-    })
-      .then((res: any) => res)
+    const resData = await fetch(
+      `http://${runtimeConfig.app.BACK_API}/api/users/me`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `${authHeaderValue}`,
+        },
+        method: "GET",
+        credentials: "include",
+      }
+    )
+      .then(async (res: any) => await res.json())
+
       .catch((err: any) => {
         throw createError({
           statusCode: 401,

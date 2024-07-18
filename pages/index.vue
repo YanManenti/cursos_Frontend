@@ -15,7 +15,7 @@ useHead({
 
 definePageMeta({ auth: false })
 
-const data = await $fetch(`${runtimeConfig.app.apiUrl}/api/courses/`).then((res: any) => res.courses);
+const data = await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/`).then(async (res: any) => res.json().then((data: any) => data.courses));
 
 const courses = ref(data);
 

@@ -8,12 +8,17 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: false,
+  ssr: true,
   css: ["~/assets/css/main.css"],
-
+  routeRules: {
+    "/api/auth/**": {
+      cors: false,
+    },
+  },
   runtimeConfig: {
     app: {
-      apiUrl: process.env.AUTH_API,
+      BACK_API: process.env.BACK_API,
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     },
   },
 
@@ -57,20 +62,19 @@ export default defineNuxtConfig({
   build: {
     transpile: ["jsonwebtoken"],
   },
-
   auth: {
     isEnabled: true,
     globalAppMiddleware: {
       isEnabled: true,
     },
-    baseURL: "/api/auth",
+    baseURL: "http://127.0.0.1:3000/api/auth/",
     provider: {
       type: "refresh",
       endpoints: {
-        signIn: { path: "/login", method: "post" },
-        signOut: { path: "/logout", method: "post" },
-        getSession: { path: "/user", method: "get" },
-        refresh: { path: "/refresh", method: "post" },
+        signIn: { path: "login", method: "post" },
+        signOut: { path: "logout", method: "post" },
+        getSession: { path: "user", method: "get" },
+        refresh: { path: "refresh", method: "post" },
       },
       pages: {
         login: "/login",

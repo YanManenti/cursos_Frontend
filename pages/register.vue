@@ -96,7 +96,7 @@ const register = async () => {
         })
         return
     }
-    await $fetch(`${runtimeConfig.app.apiUrl}/api/users/`, {
+    await fetch(`http://${runtimeConfig.app.BACK_API}/api/users/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
