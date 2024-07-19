@@ -8,12 +8,23 @@ export default defineNuxtConfig({
     },
   },
 
-  ssr: true,
+  ssr: false,
   css: ["~/assets/css/main.css"],
   routeRules: {
     "/api/auth/**": {
-      cors: false,
+      proxy: "http://localhost:3000/api/auth/**",
+      cors: true,
+      headers: {
+        'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Expose-Headers': '*',
+      },
     },
+  },
+  experimental: {
+    crossOriginPrefetch: true,
   },
   runtimeConfig: {
     app: {
