@@ -4,6 +4,7 @@ import CarouselContent from '@/components/ui/carousel/CarouselContent.vue';
 import CarouselItem from '@/components/ui/carousel/CarouselItem.vue';
 import CarouselNext from '@/components/ui/carousel/CarouselNext.vue';
 import CarouselPrevious from '@/components/ui/carousel/CarouselPrevious.vue';
+import { toast } from '@/components/ui/toast';
 import { ArrowRight } from 'lucide-vue-next';
 
 
@@ -15,7 +16,21 @@ useHead({
 
 definePageMeta({ auth: false })
 
-const data = await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/`).then(async (res: any) => res.json().then((data: any) => data.courses));
+const data = await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/`)
+    .then(async (res: any) => {
+        const parsed = await res.json();
+        if (res.ok) {
+            return parsed.courses;
+        } else {
+            throw new Error(parsed.message, res.status);
+        }
+    })
+    .catch((err: any) => {
+        toast({
+            title: 'Erro ao carregar cursos',
+            description: err.message,
+        });
+    })
 
 const courses = ref(data);
 

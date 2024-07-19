@@ -46,14 +46,20 @@ const { toast } = useToast()
 
 const fetcher = async (order_by: string, namefilter: string, page: number, limit: number, errorTitle: string, errorReturn?: object) => {
     return await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/search/?order_by=${order_by}&namefilter=${namefilter}&page=${page}&limit=${limit}`)
-        .then(async (res: any) => await res.json())
+        .then(async (res: any) => {
+            const parsed = await res.json();
+            if (res.ok) {
+                return parsed;
+            } else {
+                toast({
+                    title: errorTitle,
+                    description: parsed.detail,
+                    variant: 'destructive',
+                })
+                throw new Error(parsed.detail, res.status);
+            }
+        })
         .catch((err: any) => {
-            toast({
-                title: errorTitle,
-                description: err.data.detail,
-                variant: 'destructive',
-            })
-
             return errorReturn ? errorReturn : null;
         });
 }
@@ -141,18 +147,21 @@ const register = async () => {
             price: price.value,
             background: background.value,
         }),
-    }).then((res: any) => {
-        if (res) {
+    }).then(async (res: any) => {
+        const parsed = await res.json();
+        if (res.ok) {
             toast({
                 title: 'Curso cadastrado',
                 description: 'Seu curso foi cadastrado com sucesso!',
             });
             clearForm();
+        } else {
+            throw new Error(parsed.detail, res.status);
         }
     }).catch((err: any) => {
         toast({
             title: 'Erro ao cadastrar curso',
-            description: err.data.detail,
+            description: err.message,
             variant: 'destructive',
         });
     });
@@ -163,17 +172,20 @@ const handleDelete = async (id: string) => {
     await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${id}`, {
         method: 'DELETE',
     }).then((res: any) => {
-        if (res) {
+        const parsed = res.json();
+        if (res.ok) {
             toast({
                 title: 'Curso excluído',
                 description: 'Seu curso foi excluído com sucesso!',
             });
             clearForm();
+        } else {
+            throw new Error(parsed.detail, res.status);
         }
     }).catch((err: any) => {
         toast({
             title: 'Erro ao excluir curso',
-            description: err.data.detail,
+            description: err.message,
             variant: 'destructive',
         });
     });

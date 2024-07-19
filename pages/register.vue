@@ -108,19 +108,31 @@ const register = async () => {
             avatar: avatar.value,
         }),
     }).then(async (res: any) => {
-        if (res.id) {
+        const parsed = await res.json();
+        if (res.ok) {
             await signIn({ email: email.value, password: password.value })
-                .then(() => {
-                    clear();
-                    navigateTo('/courses');
+                .then(async (res: any) => {
+                    const parsed = await res.json();
+                    if (res.ok) {
+                        toast({
+                            title: 'Logado com sucesso',
+                            description: 'Você foi logado com sucesso!',
+                        })
+                        clear();
+                        navigateTo('/courses');
+                    } else {
+                        throw new Error(parsed.detail, res.status);
+                    }
                 })
                 .catch((err: any) => {
                     toast({
                         title: 'Erro ao logar',
-                        description: err.data?.detail,
+                        description: err.message,
                         variant: 'destructive',
                     })
                 })
+        } else {
+            throw new Error(parsed.detail, res.status);
         }
     }).then(() => {
         toast({
@@ -129,10 +141,9 @@ const register = async () => {
         })
         clear();
     }).catch((err: any) => {
-        console.log(err);
         toast({
             title: 'Erro ao cadastrar',
-            description: err.data?.detail,
+            description: err.message,
             variant: 'destructive',
         })
     })

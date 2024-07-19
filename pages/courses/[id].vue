@@ -23,7 +23,7 @@ const { status, token } = useAuth()
 const { toast } = useToast()
 const route = useRoute();
 
-const courseData = ref(await $fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}`).then((res: any) => res))
+const courseData = ref(await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}`).then(async (res: any) => await res.json()))
 const setCourseData = (value: Course) => {
     courseData.value = value;
 }
@@ -41,7 +41,7 @@ useHead({
 })
 
 const handleInterest = async () => {
-    const response = await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}/add-interested`, {
+    await fetch(`http://${runtimeConfig.app.BACK_API}/api/courses/${route.params.id}/add-interested`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${token.value}`,
@@ -49,23 +49,25 @@ const handleInterest = async () => {
         method: 'PATCH',
         credentials: 'include',
     })
-        .then((res: any) => res)
+        .then(async (res: any) => {
+            const parsed = await res.json();
+            if (res.ok) {
+                toast({
+                    title: 'Interesse registrado',
+                    description: 'Seu interesse foi registrado com sucesso!',
+                });
+                setCourseData(parsed);
+            } else {
+                throw new Error(parsed.detail, res.status);
+            }
+        })
         .catch((err: any) => {
-            console.log(err);
             toast({
                 title: 'Erro ao se interessar',
-                description: err.data.detail,
+                description: err.message,
                 variant: 'destructive',
             });
         });
-
-    if (response) {
-        toast({
-            title: 'Interesse registrado',
-            description: 'Seu interesse foi registrado com sucesso!',
-        });
-        setCourseData(response);
-    }
 };
 </script>
 

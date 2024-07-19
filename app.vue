@@ -26,6 +26,7 @@ useHead({
 })
 
 import Toaster from '@/components/ui/toast/Toaster.vue'
+import { toast } from './components/ui/toast';
 
 const { status, data, signOut } = useAuth()
 
@@ -36,8 +37,23 @@ const setAvatar = (value: string) => {
 
 watch(data, async () => {
   if (data.value) {
-    const avatarString = await fetch(`http://${runtimeConfig.app.BACK_API}/api/users/avatar/${data.value.subject.id}`).then(async (res: any) => await res.json())
-    setAvatar(avatarString.avatar)
+    await fetch(`http://${runtimeConfig.app.BACK_API}/api/users/avatar/${data.value.subject.id}`)
+      .then(async (res: any) => {
+        const parsed = await res.json();
+        if (res.ok) {
+          setAvatar(parsed.avatar)
+        } else {
+          throw new Error(parsed.message, res.status);
+        }
+      })
+      .catch((err: any) => {
+        toast({
+          title: 'Erro ao carregar avatar',
+          description: err.message,
+        });
+      })
+  } else {
+    setAvatar('')
   }
 })
 
