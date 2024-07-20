@@ -27,10 +27,10 @@ const password = ref('')
 </script>
 
 <template>
-    <PageContainer class="flex flex-row justify-center md:items-center md:justify-between lg:justify-center pt-0">
-        <div class="p-12 w-[28rem]">
+    <PageContainer class="flex flex-row justify-center md:items-center md:justify-between lg:justify-center md:pt-0">
+        <div class="p-4 md:p-12 w-full md:w-[28rem]">
             <h1 class="font-bold text-2xl antialiased text-primary">Login</h1>
-            <p class="text-sm py-2 text-gray-400">Bem-vindo de volta ao IMTESTE! Continue sua jornada
+            <p class="text-sm py-4 md:py-2 text-gray-400">Bem-vindo de volta ao IMTESTE! Continue sua jornada
                 de aprendizado e
                 conquiste novos conhecimentos. Aproveite ao máximo nossos cursos e recursos exclusivos!</p>
 
@@ -41,7 +41,7 @@ const password = ref('')
                     <label for="password" class="font-bold">Password</label>
                     <Input id="password" name="password" type="password" placeholder="Password" v-model="password"
                         required />
-                    <Button type="submit" class="font-bold">
+                    <Button type="submit" class="font-bold mt-2 md:mt-0">
                         Entrar
                     </Button>
                 </div>

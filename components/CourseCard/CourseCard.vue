@@ -39,10 +39,10 @@ const emit = defineEmits<{
                                 <X class="w-4 h-4" />
                             </Button>
                         </DialogTrigger>
-                        <DialogContent class="sm:max-w-[425px]">
+                        <DialogContent class="max-w-[300px] md:max-w-[425px] rounded-md">
                             <DialogHeader>
-                                <DialogTitle class="text-primary">Excluir Curso</DialogTitle>
-                                <DialogDescription>
+                                <DialogTitle class="text-primary text-left">Excluir Curso</DialogTitle>
+                                <DialogDescription class="text-left">
                                     Excluir este curso é uma ação irreversível. Você tem certeza?
                                 </DialogDescription>
                             </DialogHeader>

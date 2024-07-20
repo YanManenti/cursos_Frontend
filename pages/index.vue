@@ -37,9 +37,10 @@ const courses = ref(data);
 </script>
 
 <template>
-    <div class="container flex p-12">
-        <div class="w-2/4 p-4 flex flex-col justify-evenly">
-            <h1 class="text-5xl font-bold leading-snug text-secondary">Desbloqueie o Seu Potencial com os Nossos
+    <div class="w-full md:container flex p-4 md:p-12 flex-col-reverse md:flex-row items-center">
+        <div class="w-full md:w-2/4 p-4 flex flex-col justify-evenly gap-4">
+            <h1 class="text-2xl md:text-5xl font-bold leading-snug text-secondary">Desbloqueie o Seu Potencial com os
+                Nossos
                 Cursos
             </h1>
             <p class="text-sm">Encontrar um emprego após a graduação pode ser fácil com o nosso curso online, que
@@ -51,38 +52,45 @@ const courses = ref(data);
                 <ArrowRight class="w-6 h-6" />
             </Button>
         </div>
-        <div class="w-2/4 p-4">
+        <div class="w-2/4 hidden md:flex p-4">
             <img src="../public/indexImage.svg" />
         </div>
 
     </div>
-    <div class="container p-12 flex flex-row">
-        <FlatCard width="w-1/3" title="Aprendizado Online"
+    <div class="w-full md:container p-4 md:p-12 flex flex-col md:flex-row items-center">
+        <FlatCard width="w-full md:w-1/3" title="Aprendizado Online"
             description="Aprenda a qualquer momento e em qualquer lugar com acesso vitalício" iconName="Signal" />
-        <FlatCard width="w-1/3" title="Aprenda Habilidades Técnicas e Interpessoais"
+        <FlatCard width="w-full md:w-1/3" title="Aprenda Habilidades Técnicas e Interpessoais"
             description="Você aprenderá habilidades técnicas e também habilidades interpessoais como colaboração, comunicação, pensamento crítico, etc."
             iconName="BrainCircuit" />
-        <FlatCard width="w-1/3" title="Certificação Reconhecida"
+        <FlatCard width="w-full md:w-1/3" title="Certificação Reconhecida"
             description="Receba um certificado reconhecido ao concluir o curso" iconName="Award" />
     </div>
-    <div class="w-full px-24 py-12 flex flex-col bg-secondary gap-6 items-center border-t border-gray-300 shadow-inner">
-        <div class="container flex flex-row justify-between">
-            <h1 class="text-3xl font-bold text-white">Cursos em Destaque</h1>
-            <Button :variant="'ghost'" class="text-white hover:text-white hover:font-bold"
+    <div
+        class="w-full px-2 py-2 md:px-24 md:py-12 flex flex-col bg-secondary gap-2 md:gap-6 items-center border-t border-gray-300 shadow-inner">
+        <div class=" flex flex-row justify-between px-2 md:px-0 w-full md:container">
+            <div class="w-fit flex flex-col">
+                <h1 class="text-base md:text-3xl font-bold text-white pt-2 md:py-0">
+                    Cursos em Destaque
+                </h1>
+
+                <span class="text-sm text-white/80 md:hidden">Arraste para ver mais!</span>
+            </div>
+            <Button :variant="'ghost'" class="text-white hover:text-white hover:font-bold py-0 md:py-2"
                 @click="$router.push('/courses')">Ver Todos</Button>
         </div>
-        <Carousel class="container flex flex-row items-center justify-center p-4">
+        <Carousel class="w-full md:container flex flex-row items-center justify-center py-4 px-0 md:px-4">
             <CarouselContent class="max-w-fit flex flex-row">
                 <template v-for="(course) in courses">
-                    <CarouselItem class="basis-1/3">
+                    <CarouselItem class="basis-full md:basis-1/3">
                         <CourseCard :id="course.id" width="w-full" :title="course.name" :price="course.price"
                             :description="course.description" :base64Image="course.background" :score="course.score"
                             :reviews="course.reviews" :onClick="() => $router.push(`/courses/${course.id}`)" />
                     </CarouselItem>
                 </template>
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious class="hidden md:flex" />
+            <CarouselNext class="hidden md:flex" />
         </Carousel>
     </div>
 </template>

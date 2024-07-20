@@ -70,30 +70,30 @@ const nav = [
 
 <template>
   <Toaster />
-  <div dir="routing/pages" :nav="nav" current-route>
-    <div class="bg-white flex flex-row max-h-40 items-center justify-between p-12">
+  <div dir="routing/pages" :nav="nav" current-route class="md:container">
+    <div class="bg-white flex flex-col md:flex-row max-h-fit items-center justify-between p-4 md:p-12">
       <div class="flex flex-row items-center gap-x-1">
         <img src="./public/logo.svg" class="max-h-14" />
         <h1 class="font-bold text-4xl antialiased text-primary text-center">IMTESTE</h1>
       </div>
       <div class="flex flex-row items-center gap-x-4">
         <Button :variant="'ghost'" @click="$router.push('/')">
-          <p class="font-semibold text-lg">Início</p>
+          <p class="font-semibold text-sm md:text-lg">Início</p>
         </Button>
         <Button :variant="'ghost'" @click="$router.push('/courses')">
-          <p class="font-semibold text-lg">Cursos</p>
+          <p class="font-semibold text-sm md:text-lg">Cursos</p>
         </Button>
         <Button :variant="'ghost'" @click="$router.push('/blog')">
-          <p class="font-semibold text-lg">Blog</p>
+          <p class="font-semibold text-sm md:text-lg">Blog</p>
         </Button>
       </div>
       <div v-if="status === 'authenticated'">
         <div class="flex flex-row items-center gap-x-2">
-          <p class="font-semibold text-lg">Bem vindo, {{ data.subject.name }}</p>
+          <p class="font-semibold text-sm md:text-lg text-right">Bem vindo, {{ data.subject.name }}</p>
           <NuxtImg :src="avatar" class="w-14 h-14 rounded-full object-cover cursor-pointer"
             @click="async () => await navigateTo('/profile')" />
           <Button :variant="'ghost'" @click="() => signOut({ callbackUrl: '/', external: true })">
-            <p class="font-semibold text-base">Sair</p>
+            <p class="font-semibold text-sm md:text-base">Sair</p>
           </Button>
         </div>
       </div>

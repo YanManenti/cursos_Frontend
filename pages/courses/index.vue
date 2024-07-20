@@ -193,25 +193,25 @@ const handleDelete = async (id: string) => {
 }
 
 
-const coursesData = computed(() => resData.value.courses);
-const total = computed(() => resData.value.total);
+const coursesData = computed(() => resData.value?.courses ? resData.value.courses : []);
+const total = computed(() => resData.value?.total ? resData.value.total : 0);
 
 
 
 </script>
 
 <template>
-    <PageContainer class="container">
+    <PageContainer class="w-full md:container">
         <Dialog v-if="status === 'authenticated'">
             <DialogTrigger as-child>
-                <Button class="fixed bottom-3 right-3 px-2 py-2">
+                <Button class="fixed bottom-14 md:bottom-3 right-3 px-2 py-2">
                     <Plus />
                 </Button>
             </DialogTrigger>
-            <DialogContent class="sm:max-w-[425px]">
+            <DialogContent class="max-w-[300px] md:max-w-[425px] rounded-md">
                 <DialogHeader>
-                    <DialogTitle class="text-primary">Crie o seu Curso!</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle class="text-primary text-left">Crie o seu Curso!</DialogTitle>
+                    <DialogDescription class="text-left">
                         Complete as informações abaixo para criar um novo curso.
                     </DialogDescription>
                 </DialogHeader>
@@ -236,7 +236,7 @@ const total = computed(() => resData.value.total);
                         <label for="price" class="font-bold">Preço</label>
                         <Input id="price" name="price" type="number" placeholder="Preço" v-model="price" required />
 
-                        <Button type="submit" class="font-bold">
+                        <Button type="submit" class="font-bold mt-2 md:mt-0">
                             Cadastrar
                         </Button>
                     </div>
@@ -244,8 +244,8 @@ const total = computed(() => resData.value.total);
             </DialogContent>
         </Dialog>
         <div class="w-full flex flex-col gap-4">
-            <div class="flex flex-row gap-2 items-end">
-                <div class="flex flex-col w-[55%] gap-1">
+            <div class="flex flex-col md:flex-row gap-4 md:gap-2 items-end">
+                <div class="flex flex-col w-full md:w-[55%] gap-1">
                     <label for="search" class="text-sm font-semibold">Nome do Curso</label>
                     <Input id="search" name="search" label="Nome"
                         class="border p-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
@@ -253,7 +253,7 @@ const total = computed(() => resData.value.total);
                         v-model:model-value="namefilter" />
                 </div>
 
-                <div class="flex flex-col w-[25%] gap-1">
+                <div class="flex flex-col w-full md:w-[25%] gap-1">
                     <label for="filter" class="text-sm font-semibold">Filtros</label>
                     <Select class="h-fit rounded-md" name="filter" id="filter"
                         @update:model-value="(e: any) => setOrder(e)" v-model:model-value="order_by">
@@ -294,8 +294,11 @@ const total = computed(() => resData.value.total);
                         </SelectContent>
                     </Select>
                 </div>
-                <Button :variant="'secondary'" class="w-[10%] font-bold" :onclick="clearFilters">Limpar</Button>
-                <Button :variant="'default'" class="w-[10%] font-bold" :onclick="search">Buscar</Button>
+                <div class="w-full flex flex-row gap-2 md:w-[20%] md:gap-2">
+                    <Button :variant="'secondary'" class="w-1/2 md:w-full font-bold"
+                        :onclick="clearFilters">Limpar</Button>
+                    <Button :variant="'default'" class="w-1/2 md:w-full font-bold" :onclick="search">Buscar</Button>
+                </div>
             </div>
             <div class="w-full h-fit flex flex-col gap-6">
                 <div class="w-full h-fit flex flex-row flex-wrap gap-4 justify-evenly">

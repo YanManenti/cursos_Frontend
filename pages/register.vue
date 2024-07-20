@@ -153,7 +153,7 @@ const register = async () => {
 
 <template>
     <PageContainer class="flex flex-row justify-center md:items-center md:justify-between lg:justify-center pt-0">
-        <div class="p-12 w-[28rem]">
+        <div class="p-4 md:p-12 w-full md:w-[28rem]">
             <h1 class="font-bold text-2xl antialiased text-primary">Cadastre-se</h1>
             <p class="text-sm py-2 text-gray-400">Bem-vindo ao IMTESTE! Começe sua jornada
                 de aprendizado e
@@ -183,7 +183,7 @@ const register = async () => {
                         <p class="text-sm text-gray-400">* Mínimo 1 caractere especial.</p>
                         <p class="text-sm text-gray-400">* Mínimo 1 número.</p>
                     </div>
-                    <Button type="submit" class="font-bold">
+                    <Button type="submit" class="font-bold mt-2 md:mt-0">
                         Cadastrar
                     </Button>
                 </div>

@@ -72,10 +72,10 @@ const handleInterest = async () => {
 </script>
 
 <template>
-    <PageContainer class="container pt-0 gap-2">
+    <PageContainer class="container pt-2 md:pt-0 gap-2">
         <NuxtImg :src="img" alt="Login Background Image"
             class="overflow-hidden h-[40vh] object-cover rounded-3xl object-center" />
-        <div class="flex flex-row flex-wrap items-center justify-between w-full pt-4">
+        <div class="flex flex-row flex-wrap items-center justify-between w-full pt-2 md:pt-4 gap-2">
             <h1 class="font-bold text-3xl antialiased text-primary">{{ title }}</h1>
             <div class="flex flex-row">
                 <Button :variant="'secondary'" class="font-bold" @click="$router.push('/login')"> Comprar
@@ -99,7 +99,7 @@ const handleInterest = async () => {
         </div>
         <div class="flex flex-col w-full">
             <h2 class="font-bold text-md antialiased text-secondary">Interessados</h2>
-            <div class="flex flex-row gap-2">
+            <div class="flex flex-row gap-2 flex-wrap">
                 <div v-for="user in interested" class="flex flex-col items-center gap-1 p-4 bg-slate-200 rounded-md">
                     <h3>{{ user.name }}</h3>
                     <p class="text-sm">{{ user.email }}</p>
