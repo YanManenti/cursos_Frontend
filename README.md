@@ -1,5 +1,5 @@
 ## Docker Build
-Abra o prompt de comando e navegue até a pasta onde o arquivo package.json está localizado.
+Abra o prompt de comando e navegue até a pasta onde o arquivo Dockerfile está localizado.
 Execute o comando abaixo:
 
 `
