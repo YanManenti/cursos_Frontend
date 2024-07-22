@@ -192,6 +192,10 @@ const handleDelete = async (id: string) => {
     search();
 }
 
+watch([page], async () => {
+    search();
+})
+
 
 const coursesData = computed(() => resData.value?.courses ? resData.value.courses : []);
 const total = computed(() => resData.value?.total ? resData.value.total : 0);

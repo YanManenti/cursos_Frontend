@@ -27,7 +27,7 @@ const emit = defineEmits<{
     <Dialog>
         <div :class="containerClass" @click="$router.push(`/courses/${id}`)">
             <div class="h-full flex flex-col gap-y-2 justify-between">
-                <div class="flex flex-col justify-start gap-y-1">
+                <div class="flex flex-col justify-start gap-y-1 min-h-[264px]">
                     <img v-bind:src="CourseCardProps.base64Image" class="rounded-lg max-h-40 object-cover"
                         alt="Course image" />
                     <div class="w-full h-fit flex justify-between items-center">
