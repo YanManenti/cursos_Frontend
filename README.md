@@ -19,3 +19,8 @@ docker run -d --name front -p 3000:3000 nuxt:latest
 
 Tenha certeza que os containers para o backend e banco de dados estejam rodando e funcionando normalmente.
 
+## Link do site
+
+`
+http://localhost:3000
+`
