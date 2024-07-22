@@ -192,7 +192,7 @@ const handleDelete = async (id: string) => {
     search();
 }
 
-watch([page], async () => {
+watch(() => page.value, async () => {
     search();
 })
 
@@ -331,7 +331,7 @@ const total = computed(() => resData.value?.total ? resData.value.total : 0);
                         </template>
 
                         <PaginationNext @click="setPage(page)" />
-                        <PaginationLast @click="setPage(Math.floor(total / limit) - 1)" />
+                        <PaginationLast @click="setPage(Math.floor(total / limit))" />
                     </PaginationList>
                 </Pagination>
             </div>

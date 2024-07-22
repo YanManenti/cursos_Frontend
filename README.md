@@ -1,75 +1,21 @@
-# Nuxt 3 Minimal Starter
+## Docker Build
+Abra o prompt de comando e navegue até a pasta onde o arquivo package.json está localizado.
+Execute o comando abaixo:
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+`
+docker build . -t nuxt:latest
+`
 
-## Setup
+## Docker Run
+Tenha certeza que a porta 3000 não está sendo usada.
 
-Make sure to install the dependencies:
+Execute o comando abaixo no prompt de comando:
 
-```bash
-# npm
-npm install
+`
+docker run -d --name front -p 3000:3000 nuxt:latest
+`
 
-# pnpm
-pnpm install
+## Antes de abrir o site!
 
-# yarn
-yarn install
+Tenha certeza que os containers para o backend e banco de dados estejam rodando e funcionando normalmente.
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
