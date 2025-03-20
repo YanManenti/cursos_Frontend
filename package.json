@@ -17,7 +17,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-vue": "^8.1.6",
     "jsonwebtoken": "^9.0.2",
-    "nuxt": "^3.12.2",
+    "nuxt": "^3.16.0",
     "nuxt-lucide-icons": "^1.0.5",
     "radix-vue": "^1.8.5",
     "shadcn-nuxt": "^0.10.4",
